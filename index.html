@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Z-CAD | Conception CAD 2D/3D & Métré de Précision</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Pro Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QRCode Lib -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style>
+        /* --- HIGH-GRADE ENGINEERING SYSTEM THEME --- */
+        :root {
+            --main-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --nav-bg: rgba(248, 250, 252, 0.92);
+            --title-color: #0f172a;
+            --body-color: #334155;
+            --muted-color: #64748b;
+            --primary: #d97706; /* Industrial Amber */
+            --primary-hover: #b45309;
+            --primary-rgb: 217, 119, 6;
+            --border-style: 1px solid rgba(15, 23, 42, 0.08);
+            --card-shadow: 0 10px 40px rgba(15, 23, 42, 0.04);
+            --success-color: #10b981;
+            
+            /* Structural Grid Layout (Blueprint Feel) */
+            --grid-bg: linear-gradient(rgba(15, 23, 42, 0.015) 1px, transparent 1px),
+                       linear-gradient(90deg, rgba(15, 23, 42, 0.015) 1px, transparent 1px);
+            --grid-dim: 30px;
+            --duration: 0.25s;
+        }
+
+        body.dark {
+            --main-bg: #040712;
+            --card-bg: #090f22;
+            --nav-bg: rgba(4, 7, 18, 0.95);
+            --title-color: #f8fafc;
+            --body-color: #94a3b8;
+            --muted-color: #475569;
+            --primary: #f59e0b;
+            --primary-hover: #d97706;
+            --primary-rgb: 245, 158, 11;
+            --border-style: 1px solid rgba(255, 255, 255, 0.05);
+            --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+            
+            /* AutoCAD Dark Workspace Grid */
+            --grid-bg: linear-gradient(rgba(245, 158, 11, 0.02) 1px, transparent 1px),
+                       linear-gradient(90deg, rgba(245, 158, 11, 0.02) 1px, transparent 1px);
+        }
+
+        /* CAD Crosshair Simulation Line */
+        #axis-h, #axis-v {
+            position: fixed;
+            background: rgba(var(--primary-rgb), 0.2);
+            pointer-events: none;
+            z-index: 99999;
+            display: none;
+            will-change: transform, top, left;
+        }
+        #axis-h { width: 100vw; height: 1px; left: 0; top: 0; }
+        #axis-v { height: 100vh; width: 1px; left: 0; top: 0; }
+
+        /* Global Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        body {
+            background-color: var(--main-bg);
+            background-image: var(--grid-bg);
+            background-size: var(--grid-dim) var(--grid-dim);
+            color: var(--body-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color var(--duration) ease;
+        }
+
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 clamp(1rem, 3vw, 2rem); }
+        section { padding: clamp(4rem, 8vw, 6rem) 0; border-bottom: var(--border-style); }
+        
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: clamp(1.8rem, 4vw, 2.2rem); font-weight: 800; color: var(--title-color); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.8rem; }
+        .section-header p { color: var(--muted-color); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+
+        .tag {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.4rem 1.2rem; background: rgba(var(--primary-rgb), 0.08);
+            border: 1px solid var(--primary); border-radius: 50px;
+            color: var(--primary); font-size: 0.75rem; font-weight: 700;
+            text-transform: uppercase; margin-bottom: 1.5rem;
+        }
+
+        /* Header Navigation */
+        header { position: fixed; top: 0; left: 0; width: 100%; background: var(--nav-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: var(--border-style); z-index: 10000; transition: background var(--duration); }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        .brand { font-size: 1.35rem; font-weight: 800; color: var(--title-color); text-decoration: none; display: flex; align-items: center; gap: 0.6rem; }
+        .brand-icon { width: 34px; height: 34px; transition: transform 0.3s ease; }
+        .brand:hover .brand-icon { transform: rotate(45deg); }
+        .brand-icon .vector-line { stroke: var(--title-color); transition: stroke 0.25s; }
+        .brand-icon .vector-accent { stroke: var(--primary); fill: none; }
+        .brand span { color: var(--primary); }
+        nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        nav ul li a { color: var(--body-color); text-decoration: none; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; transition: color 0.2s ease; }
+        nav ul li a:hover { color: var(--primary); }
+        
+        .toggle-mode { background: transparent; border: 1px solid var(--primary); color: var(--primary); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.2s ease; }
+        .toggle-mode:hover { background: var(--primary); color: #ffffff; }
+
+        /* Hero */
+        .hero { padding-top: 140px; min-height: 80vh; display: flex; align-items: center; }
+        .hero h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); font-weight: 800; color: var(--title-color); line-height: 1.2; margin-bottom: 1.5rem; }
+        .hero h1 span { color: var(--primary); }
+        .hero h3 { font-size: 1.25rem; font-weight: 500; color: var(--muted-color); margin-bottom: 1.5rem; }
+        .hero p { font-size: 1.05rem; color: var(--body-color); margin-bottom: 2.5rem; max-width: 750px; }
+        .actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+        
+        /* Buttons */
+        .btn { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; text-decoration: none; transition: all 0.2s ease; cursor: pointer; border: 1px solid transparent; }
+        .btn-solid { background: var(--primary); color: #ffffff; }
+        .btn-solid:hover { background: transparent; color: var(--primary); border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.2); }
+        .btn-stroke { background: transparent; color: var(--title-color); border-color: var(--body-color); }
+        .btn-stroke:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-cv { border-color: #0284c7; color: #0284c7; }
+        .btn-cv:hover { background: #0284c7; color: #ffffff; box-shadow: 0 8px 20px rgba(2, 132, 199, 0.2); transform: translateY(-2px); }
+        .btn-ln { border-color: #0077b5; color: #0077b5; }
+        .btn-ln:hover { background: #0077b5; color: #ffffff; box-shadow: 0 8px 20px rgba(0, 119, 181, 0.2); transform: translateY(-2px); }
+
+        /* Grids & Blocks */
+        .col-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 2rem; }
+        .col-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 1.5rem; }
+        
+        .box-item { background: var(--card-bg); border: var(--border-style); border-radius: 8px; padding: 2.5rem 2rem; box-shadow: var(--card-shadow); transition: transform 0.25s ease, border-color 0.25s ease; }
+        .box-item:hover { transform: translateY(-4px); border-color: var(--primary); }
+        .box-item .icon-wrap { width: 48px; height: 48px; background: rgba(var(--primary-rgb), 0.08); color: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1.5rem; }
+        .box-item h4 { font-size: 1.2rem; color: var(--title-color); margin-bottom: 0.8rem; font-weight: 700; }
+        .box-item p { font-size: 0.95rem; color: var(--body-color); }
+        
+        .privacy-box { border-left: 4px solid var(--primary); background: rgba(var(--primary-rgb), 0.02); }
+
+        /* Packs Commercial System */
+        .tier-card { background: var(--card-bg); border: var(--border-style); border-radius: 8px; padding: 2.5rem 1.8rem; box-shadow: var(--card-shadow); text-align: center; display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--muted-color); transition: all 0.25s ease; }
+        .tier-card.featured { border-top-color: var(--primary); }
+        .tier-card:hover { border-color: var(--primary); }
+        .tier-card h3 { font-size: 1.4rem; color: var(--title-color); margin-bottom: 0.5rem; font-weight: 800; }
+        .tier-desc { font-size: 0.85rem; color: var(--muted-color); margin-bottom: 1.8rem; }
+        .tier-list { list-style: none; text-align: left; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .tier-list li { font-size: 0.9rem; color: var(--body-color); display: flex; align-items: center; gap: 0.5rem; }
+        .tier-list li i { color: var(--success-color); }
+        .tier-card .btn { margin-top: auto; width: 100%; justify-content: center; }
+
+        /* Panel Form Stepper */
+        .panel-form { max-width: 600px; margin: 0 auto; background: var(--card-bg); border: var(--border-style); border-radius: 10px; padding: 2.5rem 2rem; box-shadow: var(--card-shadow); }
+        .step-progress { display: flex; justify-content: space-between; margin-bottom: 2.5rem; position: relative; }
+        .step-progress::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: var(--border-style); z-index: 1; transform: translateY(-50%); }
+        .step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--main-bg); border: 2px solid var(--muted-color); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; z-index: 2; color: var(--muted-color); transition: all 0.2s ease; }
+        .step-dot.active { border-color: var(--primary); color: var(--primary); background: var(--card-bg); }
+        
+        .form-section { display: none; opacity: 0; transform: translateY(5px); transition: opacity 0.25s ease, transform 0.25s ease; }
+        .form-section.active { display: flex; flex-direction: column; gap: 1.25rem; opacity: 1; transform: translateY(0); }
+        
+        .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        .field-group label { font-size: 0.85rem; font-weight: 700; color: var(--title-color); }
+        .field-group select, .field-group input, .field-group textarea { width: 100%; padding: 0.85rem 1.1rem; background: var(--main-bg); border: var(--border-style); border-radius: 6px; color: var(--title-color); font-size: 0.95rem; outline: none; }
+        .field-group select:focus, .field-group input:focus, .field-group textarea:focus { border-color: var(--primary); }
+        .form-hint { font-size: 0.78rem; color: var(--muted-color); display: flex; align-items: center; gap: 0.4rem; margin-top: -0.2rem; }
+        .form-actions { display: flex; justify-content: space-between; margin-top: 2rem; }
+
+        /* 3D Interactive vCard Deck System */
+        .deck-wrapper { perspective: 1000px; width: 100%; max-width: 450px; height: 260px; margin: 0 auto 3rem auto; cursor: pointer; }
+        .deck-card { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--card-shadow); border-radius: 12px; }
+        .deck-wrapper:hover .deck-card, .deck-wrapper.flipped .deck-card { transform: rotateY(180deg); }
+        
+        .deck-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            border-radius: 12px; padding: 1.8rem; display: flex; flex-direction: column; justify-content: space-between;
+            border: 2px solid var(--primary); background: #0f172a; color: #f8fafc;
+        }
+        .deck-face::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 20px 20px; pointer-events: none; border-radius: 12px;
+        }
+        .deck-rear { transform: rotateY(180deg); background: #090f22; }
+        
+        .deck-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        .deck-logo { font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 0.4rem; color: #f8fafc; }
+        .deck-logo span { color: var(--primary); }
+        .deck-chip { width: 32px; height: 24px; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); border-radius: 4px; opacity: 0.7; position: relative; }
+        .deck-chip::after { content: ''; position: absolute; top: 4px; left: 8px; width: 16px; height: 16px; border: 1px solid #94a3b8; }
+        
+        .deck-mid h4 { font-size: 1.15rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.2rem; }
+        .deck-mid p { font-size: 0.75rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .deck-bottom { display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.7rem; color: #94a3b8; font-family: 'Fira Code', monospace; }
+        
+        .deck-data { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.5rem; }
+        .deck-data li { display: flex; align-items: center; gap: 0.7rem; font-size: 0.8rem; color: #cbd5e1; }
+        .deck-data li i { color: var(--primary); width: 14px; text-align: center; }
+        
+        .qr-holder { background: white; padding: 5px; border-radius: 6px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .deck-hint { text-align: center; color: var(--muted-color); font-size: 0.8rem; font-weight: 600; margin-top: 1rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+
+        .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+        
+        /* Fixed WhatsApp Anchor Button */
+        .wp-link { position: fixed; bottom: 25px; right: 25px; width: 52px; height: 52px; background: #25d366; color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.6rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); z-index: 9999; text-decoration: none; transition: transform 0.2s ease; }
+        .wp-link:hover { transform: scale(1.05); }
+
+        footer { padding: 3.5rem 0; background: var(--card-bg); border-top: var(--border-style); text-align: center; font-size: 0.85rem; color: var(--muted-color); }
+        footer .base-links { margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; align-items: center; }
+        footer .base-links a { color: var(--muted-color); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; }
+        footer .base-links a:hover { color: var(--primary); }
+        footer .base-links .split { color: var(--muted-color); opacity: 0.4; }
+
+        @media (max-width: 768px) { nav ul { display: none; } }
+    </style>
+</head>
+<body>
+
+    <!-- CAD Cursor Crosshairs Elements -->
+    <div id="axis-h"></div>
+    <div id="axis-v"></div>
+
+    <header>
+        <div class="container nav-inner">
+            <a href="#accueil" class="brand">
+                <svg class="brand-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="vector-accent" cx="50" cy="50" r="40" stroke-width="4" stroke-dasharray="4 4" />
+                    <path class="vector-line" d="M25 25 H75 L25 75 H75" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="50" cy="50" r="5" fill="var(--primary)" />
+                </svg>
+                Studio <span>Z-CAD</span>
+            </a>
+            <nav role="navigation" aria-label="Menu principal">
+                <ul>
+                    <li><a href="#accueil">Accueil</a></li>
+                    <li><a href="#solutions">Solutions</a></li>
+                    <li><a href="#confidentialite">Engagement</a></li>
+                    <li><a href="#packs">Offres</a></li>
+                    <li><a href="#visite">Contact vCard</a></li>
+                    <li><a href="#devis">Cadrage</a></li>
+                </ul>
+            </nav>
+            <button class="toggle-mode" id="ctrl-theme" aria-label="Changer le mode de couleur">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="accueil">
+            <div class="container">
+                <span class="tag"><i class="fa-solid fa-shield-halved"></i> Secret Professionnel & Métré de Précision</span>
+                <h1>Ingénierie Graphique & <br><span>Métré Algorithmique</span></h1>
+                <h3>Zakariaa Karfa Bekali — Économiste de la Construction & Métreur Projeteur Freelance</h3>
+                <p>Traitement rigoureux de dossiers d'appels d'offres complexes. Extraction unifiée et automatisée des linéaires et surfaces directement depuis la géométrie CAO pour sécuriser vos budgets de chantiers.</p>
+                
+                <div class="actions">
+                    <a href="#devis" class="btn btn-solid"><i class="fa-solid fa-calculator"></i> Lancer l'audit de projet</a>
+                    <a href="#" class="btn btn-stroke btn-cv" id="download-cv-hero"><i class="fa-solid fa-file-pdf"></i> Télécharger CV Technique</a>
+                    <a href="https://wa.me/212684726647" class="btn btn-stroke" target="_blank"><i class="fa-brands fa-whatsapp"></i> Contact Direct</a>
+                    <a href="https://www.linkedin.com/in/zakariaa-karfa-bekali-%E2%AD%90-b33439100/" class="btn btn-stroke btn-ln" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Value Props -->
+        <section id="solutions">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Problèmes Résolus</h2>
+                    <p>Élimination complète des dérives budgétaires et sécurisation de la conformité de vos fichiers de plans.</p>
+                </div>
+                <div class="col-3">
+                    <article class="box-item">
+                        <div class="icon-wrap"><i class="fa-solid fa-file-pdf"></i></div>
+                        <h4>Plans Figés & PDF Scannés</h4>
+                        <p>Restitution vectorielle fidèle sous format DWG standardisé. Organisation méthodique des calques (Layers) métiers selon vos chartes graphiques.</p>
+                    </article>
+                    <article class="box-item">
+                        <div class="icon-wrap"><i class="fa-solid fa-calculator"></i></div>
+                        <h4>Métrés Manuels Imprécis</h4>
+                        <p>Extraction des données quantitatives (ex: semelles filantes) basée directement sur la géométrie, évitant les erreurs d'annotations manuelles.</p>
+                    </article>
+                    <article class="box-item">
+                        <div class="icon-wrap"><i class="fa-solid fa-layer-group"></i></div>
+                        <h4>Altération Globale des Blocs</h4>
+                        <p>Utilisation d'algorithmes d'isolation permettant de modifier la couleur ou les propriétés d'un bloc localement sans impacter sa définition générale.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Zero-Trust Confidentiality -->
+        <section id="confidentialite" style="background: rgba(var(--primary-rgb), 0.01);">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Politique Strict de Confidentialité</h2>
+                    <p>Vos projets CAO, estimations et bases de données tarifaires constituent un patrimoine stratégique protégé.</p>
+                </div>
+                <div class="col-3">
+                    <article class="box-item privacy-box">
+                        <div class="icon-wrap"><i class="fa-solid fa-user-secret"></i></div>
+                        <h4>Accord de Non-Divulgation</h4>
+                        <p>Chaque fichier d’exécution (DWG, PDF) ou table DQE qui m'est confié est soumis au secret professionnel absolu. Aucun rendu n'est jamais publié ou partagé.</p>
+                    </article>
+                    <article class="box-item privacy-box">
+                        <div class="icon-wrap"><i class="fa-solid fa-trash-can-arrow-up"></i></div>
+                        <h4>Cycle de Vie des Données</h4>
+                        <p>Vos données sources sont stockées dans un environnement crypté isolé et purgées définitivement de mes stations de calcul après livraison finale du livrable.</p>
+                    </article>
+                    <article class="box-item privacy-box">
+                        <div class="icon-wrap"><i class="fa-solid fa-gavel"></i></div>
+                        <h4>Éthique des Appels d'Offres</h4>
+                        <p>Garantie absolue de neutralité. Vos chiffrages et quantitatifs ne sont jamais exploités pour favoriser ou influencer d'autres entités lors des consultations.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing System -->
+        <section id="packs">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Structure des Options Commerciales</h2>
+                    <p>Quatre niveaux d'interventions conçus pour sécuriser l'avancement de vos dossiers d'appels d'offres.</p>
+                </div>
+                <div class="col-4">
+                    <article class="tier-card">
+                        <h3>Pack A</h3>
+                        <p class="tier-desc">Standardisation & Traitement</p>
+                        <ul class="tier-list">
+                            <li><i class="fa-solid fa-check"></i> Conversion PDF vers DWG</li>
+                            <li><i class="fa-solid fa-check"></i> Tri et filtrage par calques</li>
+                            <li><i class="fa-solid fa-check"></i> Mise à l'échelle exacte 1:1</li>
+                        </ul>
+                        <a href="#devis" class="btn btn-stroke">Sélectionner</a>
+                    </article>
+                    <article class="tier-card featured">
+                        <h3>Pack B</h3>
+                        <p class="tier-desc">Métré & Quantification</p>
+                        <ul class="tier-list">
+                            <li><i class="fa-solid fa-check"></i> Lots GO / Second Œuvre</li>
+                            <li><i class="fa-solid fa-check"></i> Tableaux Excel dynamiques</li>
+                            <li><i class="fa-solid fa-check"></i> Plans de repérage précis</li>
+                        </ul>
+                        <a href="#devis" class="btn btn-solid">Sélectionner</a>
+                    </article>
+                    <article class="tier-card">
+                        <h3>Pack C</h3>
+                        <p class="tier-desc">Relevés & Coupes</p>
+                        <ul class="tier-list">
+                            <li><i class="fa-solid fa-check"></i> Restitution d'États Existants</li>
+                            <li><i class="fa-solid fa-check"></i> Dessin de Coupes & Façades</li>
+                            <li><i class="fa-solid fa-check"></i> Tolérance technique stricte</li>
+                        </ul>
+                        <a href="#devis" class="btn btn-stroke">Sélectionner</a>
+                    </article>
+                    <article class="tier-card">
+                        <h3>Pack D</h3>
+                        <p class="tier-desc">Assistance Continue</p>
+                        <ul class="tier-list">
+                            <li><i class="fa-solid fa-check"></i> Subdivison CAO dédiée</li>
+                            <li><i class="fa-solid fa-check"></i> Audit d'erreurs quantitatives</li>
+                            <li><i class="fa-solid fa-check"></i> Support technique prioritaire</li>
+                        </ul>
+                        <a href="#devis" class="btn btn-stroke">Sélectionner</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Digital 3D Card vCard -->
+        <section id="visite">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Carte de Visite Digitale & QR Code</h2>
+                    <p>Cliquez sur la carte pour basculer entre les faces d'informations.</p>
+                </div>
+                
+                <div class="deck-wrapper" id="action-card">
+                    <div class="deck-card">
+                        <!-- Front Face -->
+                        <div class="deck-face">
+                            <div class="deck-top">
+                                <div class="deck-logo">
+                                    <i class="fa-solid fa-compass-drafting" style="color: var(--primary);"></i> Studio <span>Z-CAD</span>
+                                </div>
+                                <div class="deck-chip"></div>
+                            </div>
+                            <div class="deck-mid">
+                                <h4>Zakariaa Karfa Bekali</h4>
+                                <p>Conception CAD 2D/3D & Métré de Precision</p>
+                            </div>
+                            <div class="deck-bottom">
+                                <span>ID: 2026-ZCAD</span>
+                                <span>SALÉ / CASABLANCA</span>
+                            </div>
+                        </div>
+                        <!-- Rear Face (vCard / QR Code) -->
+                        <div class="deck-face deck-rear">
+                            <div class="deck-top">
+                                <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary);">SCAN TO VISIT</span>
+                                <div id="qr-target" class="qr-holder"></div>
+                            </div>
+                            <ul class="deck-data">
+                                <li><i class="fa-solid fa-phone"></i> +212 684 726647</li>
+                                <li><i class="fa-solid fa-envelope"></i> zakariaa.karfabekali@gmail.com</li>
+                                <li><i class="fa-solid fa-location-dot"></i> Maroc (Axe Casa-Salé)</li>
+                            </ul>
+                            <div class="deck-bottom" style="width: 100%; justify-content: center; margin-top: 0.3rem;">
+                                <span style="color: var(--primary); font-size: 0.65rem;">Économie de la Construction</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deck-hint">
+                    <i class="fa-solid fa-rotate"></i> <span>Cliquez pour retourner la carte</span>
+                </div>
+
+                <div style="text-align: center; margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-solid" id="action-vcard"><i class="fa-solid fa-address-card"></i> Télécharger la VCard</button>
+                    <button class="btn btn-stroke btn-cv" id="download-cv-footer"><i class="fa-solid fa-file-pdf"></i> Télécharger CV (PDF)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Web App Steps -->
+        <section id="devis">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Cadrage Instantané de votre Projet</h2>
+                    <p>Définissez vos besoins techniques en 3 étapes simples pour recevoir une proposition sous 24h.</p>
+                </div>
+                
+                <div class="panel-form">
+                    <div class="step-progress" role="progressbar">
+                        <div class="step-dot active" id="dot-1">1</div>
+                        <div class="step-dot" id="dot-2">2</div>
+                        <div class="step-dot" id="dot-3">3</div>
+                    </div>
+
+                    <form id="form-stepper" action="https://formspree.io/f/xnnqqjzo" method="POST" enctype="multipart/form-data">
+                        <!-- Step 1 -->
+                        <div class="form-section active" id="step-block-1">
+                            <div class="field-group">
+                                <label for="select-pack">1. Sélectionnez la formule requise :</label>
+                                <select id="select-pack" name="Pack choisi" required>
+                                    <option value="pack-a">Pack A — Standardisation & Traitement</option>
+                                    <option value="pack-b">Pack B — Métré & Quantification</option>
+                                    <option value="pack-c">Pack C — Relevés & Coupes</option>
+                                    <option value="pack-d">Pack D — Assistance Continue</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="form-section" id="step-block-2">
+                            <div class="field-group">
+                                <label for="select-lot">2. Sélectionnez le lot technique principal :</label>
+                                <select id="select-lot" name="Lot Technique" required>
+                                    <option value="go">Gros Œuvre (Infrastructures, Structure Béton)</option>
+                                    <option value="so">Second Œuvre (Revêtements, Cloisonnements)</option>
+                                    <option value="tous">Tous les lots (Dossier complet de consultation)</option>
+                                </select>
+                            </div>
+                            <div class="field-group">
+                                <label for="project-file">Charger le plan ou dossier source (Optionnel) :</label>
+                                <input type="file" id="project-file" name="Fichier Source Project">
+                                <div class="form-hint"><i class="fa-solid fa-lock"></i> Fichiers acceptés: PDF, DWG, ZIP (Max 10Mo). Transfert crypté et sécurisé.</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="form-section" id="step-block-3">
+                            <div class="field-group">
+                                <label for="input-email">3. Votre adresse email professionnelle :</label>
+                                <input type="email" id="input-email" name="Email client" placeholder="contact@entreprise.com" required>
+                            </div>
+                            <div class="field-group">
+                                <label for="input-details">Précisions ou contraintes de délais (Facultatif) :</label>
+                                <textarea id="input-details" name="Détails du projet" rows="3" placeholder="Ex: Nombre de plans à traiter, format source..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Formspree Redirect Field Hook -->
+                        <input type="hidden" name="_next" id="redirect-thanks" value="">
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-stroke" id="step-prev" style="display:none;">Précédent</button>
+                            <button type="button" class="btn btn-solid" id="step-next" style="margin-left:auto;">Suivant</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Studio Z-CAD — Zakariaa Karfa Bekali. Tous droits réservés.</p>
+            <div class="base-links">
+                <a href="#accueil">Accueil</a>
+                <span class="split">|</span>
+                <a href="#solutions">Solutions</a>
+                <span class="split">|</span>
+                <a href="#confidentialite">Engagement</a>
+                <span class="split">|</span>
+                <a href="https://www.linkedin.com/in/zakariaa-karfa-bekali-%E2%AD%90-b33439100/" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Fixed WhatsApp Widget Button Anchor -->
+    <a href="https://wa.me/212684726647" class="wp-link" target="_blank" rel="noopener" title="Contactez-moi sur WhatsApp">
+        <span class="sr">Contact WhatsApp</span>
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+    </a>
+
+    <script>
+        (() => {
+            'use strict';
+
+            const rawVCard = `BEGIN:VCARD\nVERSION:3.0\nN:Karfa Bekali;Zakariaa;;;\nFN:Zakariaa Karfa Bekali\nORG:Studio Z-CAD\nTITLE:Économiste de la Construction & Métreur Projeteur\nTEL;TYPE=CELL,VOICE:+212684726647\nEMAIL;TYPE=PREF,INTERNET:zakariaa.karfabekali@gmail.com\nURL:https://www.linkedin.com/in/zakariaa-karfa-bekali-%E2%AD%90-b33439100/nREV:2026-06-02T00:00:00ZnEND:VCARD`;
+
+            const AppCore = {
+                state: { activeStep: 1, currentMode: 'light' },
+                
+                init() {
+                    this.ui = {
+                        hLine: document.getElementById('axis-h'),
+                        vLine: document.getElementById('axis-v'),
+                        modeBtn: document.getElementById('ctrl-theme'),
+                        modeIcon: document.getElementById('ctrl-theme').querySelector('i'),
+                        next: document.getElementById('step-next'),
+                        prev: document.getElementById('step-prev'),
+                        formObj: document.getElementById('form-stepper'),
+                        cardDeck: document.getElementById('action-card'),
+                        vcardTrigger: document.getElementById('action-vcard'),
+                        redirectField: document.getElementById('redirect-thanks')
+                    };
+
+                    this.setThanksRedirect();
+                    this.registerListeners();
+                    this.loadTheme();
+                    this.setupCross();
+                    this.buildQR();
+                },
+
+                setThanksRedirect() {
+                    // Generates dynamic redirection to thanks.html next to index file
+                    const currentOrigin = window.location.origin + window.location.pathname.replace('index.html', '');
+                    this.ui.redirectField.value = `${currentOrigin}thanks.html`;
+                },
+
+                registerListeners() {
+                    this.ui.modeBtn.addEventListener('click', () => this.switchMode());
+                    this.ui.next.addEventListener('click', () => this.forward());
+                    this.ui.prev.addEventListener('click', () => this.backward());
+                    this.ui.cardDeck.addEventListener('click', () => this.ui.cardDeck.classList.toggle('flipped'));
+                    this.ui.vcardTrigger.addEventListener('click', () => this.getVCard());
+                    
+                    document.querySelectorAll('.btn-cv').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            this.getCV();
+                        });
+                    });
+                },
+
+                setupCross() {
+                    if (!window.matchMedia('(pointer: fine)').matches) return;
+                    document.addEventListener('mousemove', (e) => {
+                        this.ui.hLine.style.display = 'block';
+                        this.ui.vLine.style.display = 'block';
+                        this.ui.hLine.style.top = `${e.clientY}px`;
+                        this.ui.vLine.style.left = `${e.clientX}px`;
+                    });
+                    document.addEventListener('mouseleave', () => {
+                        this.ui.hLine.style.display = 'none';
+                        this.ui.vLine.style.display = 'none';
+                    });
+                },
+
+                loadTheme() {
+                    const cache = localStorage.getItem('app_mode') || 'light';
+                    if (cache === 'dark') {
+                        document.body.classList.add('dark');
+                        this.ui.modeIcon.className = 'fa-solid fa-sun';
+                        this.state.currentMode = 'dark';
+                    }
+                },
+
+                switchMode() {
+                    const darkActive = document.body.classList.toggle('dark');
+                    this.ui.modeIcon.className = darkActive ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+                    localStorage.setItem('app_mode', darkActive ? 'dark' : 'light');
+                },
+
+                buildQR() {
+                    new QRCode(document.getElementById("qr-target"), {
+                        text: window.location.href.split('#')[0], 
+                        width: 60,
+                        height: 60,
+                        colorDark : "#090f22",
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.M
+                    });
+                },
+
+                updateForm() {
+                    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+                    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
+
+                    document.getElementById(`step-block-${this.state.activeStep}`).classList.add('active');
+                    for (let i = 1; i <= this.state.activeStep; i++) {
+                        document.getElementById(`dot-${i}`).classList.add('active');
+                    }
+
+                    this.ui.prev.style.display = this.state.activeStep === 1 ? 'none' : 'inline-flex';
+                    this.ui.next.innerHTML = this.state.activeStep === 3 ? 'Envoyer' : 'Suivant';
+                },
+
+                forward() {
+                    const currentBlock = document.getElementById(`step-block-${this.state.activeStep}`);
+                    const targets = currentBlock.querySelectorAll('input, select, textarea');
+                    let passed = true;
+
+                    targets.forEach(t => { if(!t.checkValidity()) { passed = false; t.reportValidity(); } });
+                    if (!passed) return;
+
+                    if (this.state.activeStep < 3) {
+                        this.state.activeStep++;
+                        this.updateForm();
+                    } else {
+                        if (window.location.protocol === 'file:') {
+                            alert("Mode Local détécté. Sur GitHub Pages, ce formulaire sera envoyé de manière cryptée avec redirection vers la page de remerciements.");
+                            return;
+                        }
+                        this.ui.formObj.submit();
+                    }
+                },
+
+                backward() {
+                    if (this.state.activeStep > 1) {
+                        this.state.activeStep--;
+                        this.updateForm();
+                    }
+                },
+
+                getVCard() {
+                    const file = new Blob([rawVCard], { type: 'text/vcard;charset=utf-8;' });
+                    const element = document.createElement('a');
+                    element.href = URL.createObjectURL(file);
+                    element.download = 'Zakariaa_Karfa_Bekali.vcf';
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+                },
+
+                getCV() {
+                    const element = document.createElement('a');
+                    element.href = './cv.pdf'; 
+                    element.download = 'CV_Zakariaa_Karfa_Bekali_Economiste_Construction.pdf';
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+                }
+            };
+
+            document.addEventListener('DOMContentLoaded', () => AppCore.init());
+        })();
+    </script>
+</body>
+</html>
