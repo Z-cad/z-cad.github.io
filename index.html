@@ -222,7 +222,22 @@
         .deck-hint { text-align: center; color: var(--muted-color); font-size: 0.8rem; font-weight: 600; margin-top: 1rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
 
         .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
-        
+        .logo-separator{
+    text-align:center;
+    padding:70px 0;
+}
+
+.logo-separator img{
+    width:220px;
+    height:auto;
+    opacity:0.08;
+    transition:all 0.3s ease;
+}
+
+.logo-separator img:hover{
+    opacity:0.15;
+    transform:scale(1.05);
+}
         /* Fixed WhatsApp Anchor Button */
         .wp-link { position: fixed; bottom: 25px; right: 25px; width: 52px; height: 52px; background: #25d366; color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.6rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); z-index: 9999; text-decoration: none; transition: transform 0.2s ease; }
         .wp-link:hover { transform: scale(1.05); }
