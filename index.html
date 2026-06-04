@@ -1,8 +1,8 @@
-
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Studio Z-CAD | Conception CAD 2D/3D & Métré de Précision</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -249,6 +249,86 @@
         footer .base-links .split { color: var(--muted-color); opacity: 0.4; }
 
         @media (max-width: 768px) { nav ul { display: none; } }
+
+        /* ========== CENTRAGE GLOBAL : corrections d'alignement (sans altérer le contenu) ========== */
+        /* 1. Hero section : texte centré et actions centrées */
+        .hero .container {
+            text-align: center;
+        }
+        .hero .actions {
+            justify-content: center;
+        }
+        .hero p {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero .tag {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 2. Cartes services & privacy : centrage du texte et des icônes */
+        .box-item, .privacy-box {
+            text-align: center;
+        }
+        .box-item .icon-wrap, .privacy-box .icon-wrap {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 3. Packs commerciaux : centrage global, mais les listes restent lisibles (alignées à gauche dans un bloc centré) */
+        .tier-card {
+            text-align: center;
+        }
+        .tier-card .tier-list {
+            text-align: left;
+            display: inline-block;
+            width: auto;
+            min-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 4. Section "visite" : boutons de téléchargement + carte centrée */
+        #visite .container > div:last-of-type {
+            justify-content: center;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .deck-wrapper {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 5. Le bloc logo-separator est déjà centré */
+        /* 6. Footer liens déjà centré */
+        /* 7. Formulaire déjà centré via max-width + auto margin */
+        /* 8. Section solutions / grilles : les items sont automatiquement stretch mais texte centré */
+        .tier-card .btn {
+            margin-top: auto;
+        }
+        /* Ajustement supplémentaire pour les écrans afin d'éviter tout déséquilibre */
+        .col-3, .col-4 {
+            justify-items: center;
+        }
+        /* mais on garde le contenu de chaque carte homogène */
+        .box-item, .tier-card {
+            width: 100%;
+        }
+        /* alignement titre et description */
+        .section-header h2, .section-header p {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* la carte vcard reste stable */
+        .deck-hint i, .deck-hint span {
+            vertical-align: middle;
+        }
+        /* Correction éventuelle des espaces dans les boutons d'actions supplémentaires */
+        .actions .btn {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
