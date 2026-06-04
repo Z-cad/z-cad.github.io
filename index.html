@@ -73,29 +73,30 @@
             background-image: var(--grid-bg);
             background-size: var(--grid-dim) var(--grid-dim);
             color: var(--body-color);
-            line-height: 1.6;
+            line-height: 1.5;
             overflow-x: hidden;
             transition: background-color var(--duration) ease;
         }
 
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 clamp(1rem, 3vw, 2rem); }
-        section { padding: clamp(4rem, 8vw, 6rem) 0; border-bottom: var(--border-style); }
+        /* تقليل المسافات بين القطاعات بشكل كبير */
+        section { padding: clamp(2.5rem, 5vw, 4rem) 0; border-bottom: var(--border-style); }
         
-        .section-header { text-align: center; margin-bottom: 4rem; }
-        .section-header h2 { font-size: clamp(1.8rem, 4vw, 2.2rem); font-weight: 800; color: var(--title-color); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.8rem; }
-        .section-header p { color: var(--muted-color); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 2rem; }
+        .section-header h2 { font-size: clamp(1.6rem, 3.5vw, 2rem); font-weight: 800; color: var(--title-color); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; }
+        .section-header p { color: var(--muted-color); font-size: 0.95rem; max-width: 600px; margin: 0 auto; }
 
         .tag {
             display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.4rem 1.2rem; background: rgba(var(--primary-rgb), 0.08);
+            padding: 0.3rem 1rem; background: rgba(var(--primary-rgb), 0.08);
             border: 1px solid var(--primary); border-radius: 50px;
-            color: var(--primary); font-size: 0.75rem; font-weight: 700;
-            text-transform: uppercase; margin-bottom: 1.5rem;
+            color: var(--primary); font-size: 0.7rem; font-weight: 700;
+            text-transform: uppercase; margin-bottom: 1rem;
         }
 
         /* Header Navigation */
         header { position: fixed; top: 0; left: 0; width: 100%; background: var(--nav-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: var(--border-style); z-index: 10000; transition: background var(--duration); }
-        .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 120px; }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 80px; } /* تقليل ارتفاع الهيدر */
      .brand {
     font-size: 1.35rem;
     font-weight: 800;
@@ -112,7 +113,7 @@
         .brand-icon .vector-accent { stroke: var(--primary); fill: none; }
         .brand span { color: var(--primary); }
 		.site-logo{
-    height: 120px;
+    height: 70px;
     width: auto;
     display: block;
     transition: transform 0.3s ease;
@@ -121,23 +122,23 @@
 .brand:hover .site-logo{
     transform: scale(1.05);
 }
-        nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
-        nav ul li a { color: var(--body-color); text-decoration: none; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; transition: color 0.2s ease; }
+        nav ul { display: flex; list-style: none; gap: 1.8rem; align-items: center; }
+        nav ul li a { color: var(--body-color); text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; transition: color 0.2s ease; }
         nav ul li a:hover { color: var(--primary); }
         
-        .toggle-mode { background: transparent; border: 1px solid var(--primary); color: var(--primary); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.2s ease; }
+        .toggle-mode { background: transparent; border: 1px solid var(--primary); color: var(--primary); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.2s ease; }
         .toggle-mode:hover { background: var(--primary); color: #ffffff; }
 
         /* Hero */
-        .hero { padding-top: 140px; min-height: 80vh; display: flex; align-items: center; }
-        .hero h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); font-weight: 800; color: var(--title-color); line-height: 1.2; margin-bottom: 1.5rem; }
+        .hero { padding-top: 100px; min-height: 70vh; display: flex; align-items: center; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; color: var(--title-color); line-height: 1.2; margin-bottom: 0.8rem; }
         .hero h1 span { color: var(--primary); }
-        .hero h3 { font-size: 1.25rem; font-weight: 500; color: var(--muted-color); margin-bottom: 1.5rem; }
-        .hero p { font-size: 1.05rem; color: var(--body-color); margin-bottom: 2.5rem; max-width: 750px; }
-        .actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .hero h3 { font-size: 1.1rem; font-weight: 500; color: var(--muted-color); margin-bottom: 1rem; }
+        .hero p { font-size: 0.95rem; color: var(--body-color); margin-bottom: 1.8rem; max-width: 750px; }
+        .actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
         
         /* Buttons */
-        .btn { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1.8rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; text-decoration: none; transition: all 0.2s ease; cursor: pointer; border: 1px solid transparent; }
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; text-decoration: none; transition: all 0.2s ease; cursor: pointer; border: 1px solid transparent; }
         .btn-solid { background: var(--primary); color: #ffffff; }
         .btn-solid:hover { background: transparent; color: var(--primary); border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.2); }
         .btn-stroke { background: transparent; color: var(--title-color); border-color: var(--body-color); }
@@ -148,53 +149,53 @@
         .btn-ln:hover { background: #0077b5; color: #ffffff; box-shadow: 0 8px 20px rgba(0, 119, 181, 0.2); transform: translateY(-2px); }
 
         /* Grids & Blocks */
-        .col-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 2rem; }
-        .col-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 1.5rem; }
+        .col-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.5rem; }
+        .col-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 1.2rem; }
         
-        .box-item { background: var(--card-bg); border: var(--border-style); border-radius: 8px; padding: 2.5rem 2rem; box-shadow: var(--card-shadow); transition: transform 0.25s ease, border-color 0.25s ease; }
+        .box-item { background: var(--card-bg); border: var(--border-style); border-radius: 8px; padding: 1.8rem 1.5rem; box-shadow: var(--card-shadow); transition: transform 0.25s ease, border-color 0.25s ease; }
         .box-item:hover { transform: translateY(-4px); border-color: var(--primary); }
-        .box-item .icon-wrap { width: 48px; height: 48px; background: rgba(var(--primary-rgb), 0.08); color: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1.5rem; }
-        .box-item h4 { font-size: 1.2rem; color: var(--title-color); margin-bottom: 0.8rem; font-weight: 700; }
-        .box-item p { font-size: 0.95rem; color: var(--body-color); }
+        .box-item .icon-wrap { width: 42px; height: 42px; background: rgba(var(--primary-rgb), 0.08); color: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 1.2rem; }
+        .box-item h4 { font-size: 1.1rem; color: var(--title-color); margin-bottom: 0.6rem; font-weight: 700; }
+        .box-item p { font-size: 0.85rem; color: var(--body-color); }
         
         .privacy-box { border-left: 4px solid var(--primary); background: rgba(var(--primary-rgb), 0.02); }
 
         /* Packs Commercial System */
-        .tier-card { background: var(--card-bg); border: var(--border-style); border-radius: 8px; padding: 2.5rem 1.8rem; box-shadow: var(--card-shadow); text-align: center; display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--muted-color); transition: all 0.25s ease; }
+        .tier-card { background: var(--card-bg); border: var(--border-style); border-radius: 8px; padding: 1.8rem 1.2rem; box-shadow: var(--card-shadow); text-align: center; display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--muted-color); transition: all 0.25s ease; }
         .tier-card.featured { border-top-color: var(--primary); }
         .tier-card:hover { border-color: var(--primary); }
-        .tier-card h3 { font-size: 1.4rem; color: var(--title-color); margin-bottom: 0.5rem; font-weight: 800; }
-        .tier-desc { font-size: 0.85rem; color: var(--muted-color); margin-bottom: 1.8rem; }
-        .tier-list { list-style: none; text-align: left; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
-        .tier-list li { font-size: 0.9rem; color: var(--body-color); display: flex; align-items: center; gap: 0.5rem; }
+        .tier-card h3 { font-size: 1.3rem; color: var(--title-color); margin-bottom: 0.3rem; font-weight: 800; }
+        .tier-desc { font-size: 0.8rem; color: var(--muted-color); margin-bottom: 1.2rem; }
+        .tier-list { list-style: none; text-align: left; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
+        .tier-list li { font-size: 0.85rem; color: var(--body-color); display: flex; align-items: center; gap: 0.5rem; }
         .tier-list li i { color: var(--success-color); }
         .tier-card .btn { margin-top: auto; width: 100%; justify-content: center; }
 
         /* Panel Form Stepper */
-        .panel-form { max-width: 600px; margin: 0 auto; background: var(--card-bg); border: var(--border-style); border-radius: 10px; padding: 2.5rem 2rem; box-shadow: var(--card-shadow); }
-        .step-progress { display: flex; justify-content: space-between; margin-bottom: 2.5rem; position: relative; }
+        .panel-form { max-width: 600px; margin: 0 auto; background: var(--card-bg); border: var(--border-style); border-radius: 10px; padding: 1.8rem 1.8rem; box-shadow: var(--card-shadow); }
+        .step-progress { display: flex; justify-content: space-between; margin-bottom: 1.8rem; position: relative; }
         .step-progress::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: var(--border-style); z-index: 1; transform: translateY(-50%); }
-        .step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--main-bg); border: 2px solid var(--muted-color); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; z-index: 2; color: var(--muted-color); transition: all 0.2s ease; }
+        .step-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--main-bg); border: 2px solid var(--muted-color); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; z-index: 2; color: var(--muted-color); transition: all 0.2s ease; }
         .step-dot.active { border-color: var(--primary); color: var(--primary); background: var(--card-bg); }
         
         .form-section { display: none; opacity: 0; transform: translateY(5px); transition: opacity 0.25s ease, transform 0.25s ease; }
-        .form-section.active { display: flex; flex-direction: column; gap: 1.25rem; opacity: 1; transform: translateY(0); }
+        .form-section.active { display: flex; flex-direction: column; gap: 1rem; opacity: 1; transform: translateY(0); }
         
-        .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
-        .field-group label { font-size: 0.85rem; font-weight: 700; color: var(--title-color); }
-        .field-group select, .field-group input, .field-group textarea { width: 100%; padding: 0.85rem 1.1rem; background: var(--main-bg); border: var(--border-style); border-radius: 6px; color: var(--title-color); font-size: 0.95rem; outline: none; }
+        .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
+        .field-group label { font-size: 0.8rem; font-weight: 700; color: var(--title-color); }
+        .field-group select, .field-group input, .field-group textarea { width: 100%; padding: 0.7rem 1rem; background: var(--main-bg); border: var(--border-style); border-radius: 6px; color: var(--title-color); font-size: 0.9rem; outline: none; }
         .field-group select:focus, .field-group input:focus, .field-group textarea:focus { border-color: var(--primary); }
-        .form-hint { font-size: 0.78rem; color: var(--muted-color); display: flex; align-items: center; gap: 0.4rem; margin-top: -0.2rem; }
-        .form-actions { display: flex; justify-content: space-between; margin-top: 2rem; }
+        .form-hint { font-size: 0.75rem; color: var(--muted-color); display: flex; align-items: center; gap: 0.4rem; margin-top: -0.2rem; }
+        .form-actions { display: flex; justify-content: space-between; margin-top: 1.5rem; }
 
         /* 3D Interactive vCard Deck System */
-        .deck-wrapper { perspective: 1000px; width: 100%; max-width: 450px; height: 260px; margin: 0 auto 3rem auto; cursor: pointer; }
+        .deck-wrapper { perspective: 1000px; width: 100%; max-width: 450px; height: 240px; margin: 0 auto 1.5rem auto; cursor: pointer; }
         .deck-card { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--card-shadow); border-radius: 12px; }
         .deck-wrapper:hover .deck-card, .deck-wrapper.flipped .deck-card { transform: rotateY(180deg); }
         
         .deck-face {
             position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden;
-            border-radius: 12px; padding: 1.8rem; display: flex; flex-direction: column; justify-content: space-between;
+            border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;
             border: 2px solid var(--primary); background: #0f172a; color: #f8fafc;
         }
         .deck-face::before {
@@ -205,30 +206,30 @@
         .deck-rear { transform: rotateY(180deg); background: #090f22; }
         
         .deck-top { display: flex; justify-content: space-between; align-items: flex-start; }
-        .deck-logo { font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 0.4rem; color: #f8fafc; }
+        .deck-logo { font-size: 1rem; font-weight: 800; display: flex; align-items: center; gap: 0.4rem; color: #f8fafc; }
         .deck-logo span { color: var(--primary); }
-        .deck-chip { width: 32px; height: 24px; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); border-radius: 4px; opacity: 0.7; position: relative; }
-        .deck-chip::after { content: ''; position: absolute; top: 4px; left: 8px; width: 16px; height: 16px; border: 1px solid #94a3b8; }
+        .deck-chip { width: 28px; height: 20px; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); border-radius: 4px; opacity: 0.7; position: relative; }
+        .deck-chip::after { content: ''; position: absolute; top: 3px; left: 6px; width: 14px; height: 14px; border: 1px solid #94a3b8; }
         
-        .deck-mid h4 { font-size: 1.15rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.2rem; }
-        .deck-mid p { font-size: 0.75rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-        .deck-bottom { display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.7rem; color: #94a3b8; font-family: 'Fira Code', monospace; }
+        .deck-mid h4 { font-size: 1rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.1rem; }
+        .deck-mid p { font-size: 0.7rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .deck-bottom { display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.65rem; color: #94a3b8; font-family: 'Fira Code', monospace; }
         
-        .deck-data { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.5rem; }
-        .deck-data li { display: flex; align-items: center; gap: 0.7rem; font-size: 0.8rem; color: #cbd5e1; }
+        .deck-data { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.3rem; }
+        .deck-data li { display: flex; align-items: center; gap: 0.6rem; font-size: 0.75rem; color: #cbd5e1; }
         .deck-data li i { color: var(--primary); width: 14px; text-align: center; }
         
-        .qr-holder { background: white; padding: 5px; border-radius: 6px; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .deck-hint { text-align: center; color: var(--muted-color); font-size: 0.8rem; font-weight: 600; margin-top: 1rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+        .qr-holder { background: white; padding: 4px; border-radius: 6px; width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .deck-hint { text-align: center; color: var(--muted-color); font-size: 0.75rem; font-weight: 600; margin-top: 0.5rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
 
         .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
         .logo-separator{
     text-align:center;
-    padding:70px 0;
+    padding: 30px 0;
 }
 
 .logo-separator img{
-    width:220px;
+    width: 160px;
     height:auto;
     opacity:0.08;
     transition:all 0.3s ease;
@@ -239,96 +240,38 @@
     transform:scale(1.05);
 }
         /* Fixed WhatsApp Anchor Button */
-        .wp-link { position: fixed; bottom: 25px; right: 25px; width: 52px; height: 52px; background: #25d366; color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.6rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); z-index: 9999; text-decoration: none; transition: transform 0.2s ease; }
+        .wp-link { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: #25d366; color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); z-index: 9999; text-decoration: none; transition: transform 0.2s ease; }
         .wp-link:hover { transform: scale(1.05); }
 
-        footer { padding: 3.5rem 0; background: var(--card-bg); border-top: var(--border-style); text-align: center; font-size: 0.85rem; color: var(--muted-color); }
-        footer .base-links { margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem; align-items: center; }
-        footer .base-links a { color: var(--muted-color); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; }
+        footer { padding: 2rem 0; background: var(--card-bg); border-top: var(--border-style); text-align: center; font-size: 0.8rem; color: var(--muted-color); }
+        footer .base-links { margin-top: 0.8rem; display: flex; justify-content: center; gap: 1.2rem; align-items: center; }
+        footer .base-links a { color: var(--muted-color); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem; }
         footer .base-links a:hover { color: var(--primary); }
         footer .base-links .split { color: var(--muted-color); opacity: 0.4; }
 
-        @media (max-width: 768px) { nav ul { display: none; } }
-
-        /* ========== CENTRAGE GLOBAL : corrections d'alignement (sans altérer le contenu) ========== */
-        /* 1. Hero section : texte centré et actions centrées */
-        .hero .container {
-            text-align: center;
-        }
-        .hero .actions {
-            justify-content: center;
-        }
-        .hero p {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .hero .tag {
-            margin-left: auto;
-            margin-right: auto;
+        @media (max-width: 768px) { 
+            nav ul { display: none; } 
+            .site-logo { height: 50px; }
+            .nav-inner { height: 65px; }
+            .hero { padding-top: 80px; min-height: 60vh; }
+            .col-3, .col-4 { gap: 1rem; }
+            .box-item { padding: 1.2rem; }
+            .tier-card { padding: 1.2rem; }
         }
 
-        /* 2. Cartes services & privacy : centrage du texte et des icônes */
-        .box-item, .privacy-box {
-            text-align: center;
-        }
-        .box-item .icon-wrap, .privacy-box .icon-wrap {
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* 3. Packs commerciaux : centrage global, mais les listes restent lisibles (alignées à gauche dans un bloc centré) */
-        .tier-card {
-            text-align: center;
-        }
-        .tier-card .tier-list {
-            text-align: left;
-            display: inline-block;
-            width: auto;
-            min-width: 200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* 4. Section "visite" : boutons de téléchargement + carte centrée */
-        #visite .container > div:last-of-type {
-            justify-content: center;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .deck-wrapper {
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* 5. Le bloc logo-separator est déjà centré */
-        /* 6. Footer liens déjà centré */
-        /* 7. Formulaire déjà centré via max-width + auto margin */
-        /* 8. Section solutions / grilles : les items sont automatiquement stretch mais texte centré */
-        .tier-card .btn {
-            margin-top: auto;
-        }
-        /* Ajustement supplémentaire pour les écrans afin d'éviter tout déséquilibre */
-        .col-3, .col-4 {
-            justify-items: center;
-        }
-        /* mais on garde le contenu de chaque carte homogène */
-        .box-item, .tier-card {
-            width: 100%;
-        }
-        /* alignement titre et description */
-        .section-header h2, .section-header p {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        /* la carte vcard reste stable */
-        .deck-hint i, .deck-hint span {
-            vertical-align: middle;
-        }
-        /* Correction éventuelle des espaces dans les boutons d'actions supplémentaires */
-        .actions .btn {
-            margin-bottom: 0;
-        }
+        /* ========== CENTRAGE GLOBAL ========== */
+        .hero .container { text-align: center; }
+        .hero .actions { justify-content: center; }
+        .hero p { margin-left: auto; margin-right: auto; }
+        .hero .tag { margin-left: auto; margin-right: auto; }
+        .box-item, .privacy-box { text-align: center; }
+        .box-item .icon-wrap, .privacy-box .icon-wrap { margin-left: auto; margin-right: auto; }
+        .tier-card { text-align: center; }
+        .tier-card .tier-list { text-align: left; display: inline-block; width: auto; min-width: 180px; margin-left: auto; margin-right: auto; }
+        #visite .container > div:last-of-type { justify-content: center; display: flex; flex-wrap: wrap; gap: 0.8rem; }
+        .deck-wrapper { margin-left: auto; margin-right: auto; }
+        .section-header h2, .section-header p { margin-left: auto; margin-right: auto; }
+        .actions .btn { margin-bottom: 0; }
     </style>
 </head>
 <body>
@@ -501,7 +444,7 @@
                         <div class="deck-face">
                             <div class="deck-top">
                                 <div class="deck-logo">
-    <img src="logozcad.png" alt="Z-CAD Logo" style="height:60px;width:auto;">
+    <img src="logozcad.png" alt="Z-CAD Logo" style="height:45px;width:auto;">
 </div>
                                 <div class="deck-chip"></div>
                             </div>
@@ -517,7 +460,7 @@
                         <!-- Rear Face (vCard / QR Code) -->
                         <div class="deck-face deck-rear">
                             <div class="deck-top">
-                                <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary);">SCAN TO VISIT</span>
+                                <span style="font-size: 0.7rem; font-weight: 700; color: var(--primary);">SCAN TO VISIT</span>
                                 <div id="qr-target" class="qr-holder"></div>
                             </div>
                             <ul class="deck-data">
@@ -525,8 +468,8 @@
                                 <li><i class="fa-solid fa-envelope"></i> mr.zakariaa@outlook.com</li>
                                 <li><i class="fa-solid fa-location-dot"></i> Maroc Rabat-Salé</li>
                             </ul>
-                            <div class="deck-bottom" style="width: 100%; justify-content: center; margin-top: 0.3rem;">
-                                <span style="color: var(--primary); font-size: 0.65rem;">Économie de la Construction</span>
+                            <div class="deck-bottom" style="width: 100%; justify-content: center; margin-top: 0.2rem;">
+                                <span style="color: var(--primary); font-size: 0.6rem;">Économie de la Construction</span>
                             </div>
                         </div>
                     </div>
@@ -536,7 +479,7 @@
                     <i class="fa-solid fa-rotate"></i> <span>Cliquez pour retourner la carte</span>
                 </div>
 
-                <div style="text-align: center; margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <div style="text-align: center; margin-top: 1rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
                     <button class="btn btn-solid" id="action-vcard"><i class="fa-solid fa-address-card"></i> Télécharger la VCard</button>
                     <button class="btn btn-stroke btn-cv" id="download-cv-footer"><i class="fa-solid fa-file-pdf"></i> Télécharger CV (PDF)</button>
                 </div>
@@ -600,7 +543,7 @@
                             
                             <div class="field-group">
                                 <label for="input-details">Précisions ou contraintes de délais (Facultatif) :</label>
-                                <textarea id="input-details" name="Détails du projet" rows="3" placeholder="Ex: Nombre de plans à traiter, format source..."></textarea>
+                                <textarea id="input-details" name="Détails du projet" rows="2" placeholder="Ex: Nombre de plans à traiter, format source..."></textarea>
                             </div>
                         </div>
 
@@ -669,7 +612,6 @@
                 },
 
                 setThanksRedirect() {
-                    // Generates dynamic redirection to thanks.html next to index file
                     const currentOrigin = window.location.origin + window.location.pathname.replace('index.html', '');
                     this.ui.redirectField.value = `${currentOrigin}thanks.html`;
                 },
@@ -721,8 +663,8 @@
                 buildQR() {
                     new QRCode(document.getElementById("qr-target"), {
                         text: window.location.href.split('#')[0], 
-                        width: 60,
-                        height: 60,
+                        width: 55,
+                        height: 55,
                         colorDark : "#090f22",
                         colorLight : "#ffffff",
                         correctLevel : QRCode.CorrectLevel.M
