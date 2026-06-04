@@ -1,3 +1,4 @@
+
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -101,6 +102,16 @@
         .brand-icon .vector-line { stroke: var(--title-color); transition: stroke 0.25s; }
         .brand-icon .vector-accent { stroke: var(--primary); fill: none; }
         .brand span { color: var(--primary); }
+		.site-logo{
+    height: 180px;
+    width: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.brand:hover .site-logo{
+    transform: scale(1.05);
+}
         nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
         nav ul li a { color: var(--body-color); text-decoration: none; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; transition: color 0.2s ease; }
         nav ul li a:hover { color: var(--primary); }
