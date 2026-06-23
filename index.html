@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Studio Z-CAD | Conception CAD 2D/3D & Métré de Précision</title>
+    
+    <!-- SEO OPTIMIZATION -->
+    <title>Métreur Vérificateur Freelance | Rabat | Z-CAD</title>
+    <meta name="description" content="Zakariaa Karfa Bekali : Métré TCE, décomptes, étude de prix et lots architecturaux. Sous-traitance BTP 100% confidentielle pour entreprises au Maroc.">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         /* --- HIGH-GRADE ENGINEERING SYSTEM THEME --- */
@@ -26,7 +29,6 @@
             --card-shadow: 0 10px 40px rgba(15, 23, 42, 0.04);
             --success-color: #10b981;
             
-            /* Structural Grid Layout (Blueprint Feel) */
             --grid-bg: linear-gradient(rgba(15, 23, 42, 0.015) 1px, transparent 1px),
                        linear-gradient(90deg, rgba(15, 23, 42, 0.015) 1px, transparent 1px);
             --grid-dim: 30px;
@@ -46,237 +48,135 @@
             --border-style: 1px solid rgba(255, 255, 255, 0.05);
             --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
             
-            /* AutoCAD Dark Workspace Grid */
             --grid-bg: linear-gradient(rgba(245, 158, 11, 0.02) 1px, transparent 1px),
                        linear-gradient(90deg, rgba(245, 158, 11, 0.02) 1px, transparent 1px);
         }
 
-        /* Custom Scrollbar for CAD Feel */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--main-bg); }
-        ::-webkit-scrollbar-thumb { background: rgba(var(--primary-rgb), 0.5); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-
-        /* CAD Crosshair Simulation Line */
-        #axis-h, #axis-v {
-            position: fixed;
-            background: rgba(var(--primary-rgb), 0.3);
-            pointer-events: none;
-            z-index: 99998;
-            display: none;
-            will-change: transform, top, left;
-        }
+        #axis-h, #axis-v { position: fixed; background: rgba(var(--primary-rgb), 0.3); pointer-events: none; z-index: 99998; display: none; }
         #axis-h { width: 100vw; height: 1px; left: 0; top: 0; }
         #axis-v { height: 100vh; width: 1px; left: 0; top: 0; }
 
-        /* Dynamic Coordinates (X, Y) */
         #cad-coords {
-            position: fixed;
-            background: rgba(15, 23, 42, 0.85);
-            color: #f59e0b;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.75rem;
-            padding: 4px 8px;
-            border: 1px solid #f59e0b;
-            pointer-events: none;
-            z-index: 99999;
-            display: none;
-            border-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            backdrop-filter: blur(4px);
+            position: fixed; background: rgba(15, 23, 42, 0.85); color: #f59e0b;
+            font-family: 'Fira Code', monospace; font-size: 0.75rem; padding: 4px 8px;
+            border: 1px solid #f59e0b; pointer-events: none; z-index: 99999; display: none;
+            border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); backdrop-filter: blur(4px);
         }
         body.dark #cad-coords { background: rgba(4, 7, 18, 0.85); }
 
-        /* AutoCAD Selection Box Overlay */
-        #cad-selection {
-            position: fixed;
-            pointer-events: none;
-            z-index: 99997;
-            display: none;
-        }
-        .sel-window {
-            background: rgba(0, 120, 215, 0.15);
-            border: 1px solid rgba(0, 120, 215, 0.8);
-        }
-        .sel-crossing {
-            background: rgba(76, 175, 80, 0.15);
-            border: 1px dashed rgba(76, 175, 80, 0.8);
-        }
+        #cad-selection { position: fixed; pointer-events: none; z-index: 99997; display: none; }
+        .sel-window { background: rgba(0, 120, 215, 0.15); border: 1px solid rgba(0, 120, 215, 0.8); }
+        .sel-crossing { background: rgba(76, 175, 80, 0.15); border: 1px dashed rgba(76, 175, 80, 0.8); }
 
-        /* Global Reset */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        body {
-            background-color: var(--main-bg);
-            background-image: var(--grid-bg);
-            background-size: var(--grid-dim) var(--grid-dim);
-            color: var(--body-color);
-            line-height: 1.5;
-            overflow-x: hidden;
-            transition: background-color var(--duration) ease;
-        }
+        body { background-color: var(--main-bg); background-image: var(--grid-bg); background-size: var(--grid-dim) var(--grid-dim); color: var(--body-color); line-height: 1.5; overflow-x: hidden; transition: background-color var(--duration) ease; }
 
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 clamp(1rem, 3vw, 2rem); }
-        section { padding: clamp(2.5rem, 5vw, 4rem) 0; border-bottom: var(--border-style); }
+        section { padding: clamp(3.5rem, 5vw, 5rem) 0; border-bottom: var(--border-style); }
         
-        .section-header { text-align: center; margin-bottom: 2rem; }
-        .section-header h2 { font-size: clamp(1.6rem, 3.5vw, 2rem); font-weight: 800; color: var(--title-color); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem; }
-        .section-header p { color: var(--muted-color); font-size: 0.95rem; max-width: 600px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 2.5rem; }
+        .section-header h2 { font-size: clamp(1.8rem, 3.5vw, 2.2rem); font-weight: 800; color: var(--title-color); letter-spacing: 0.5px; margin-bottom: 0.6rem; }
+        .section-header p { color: var(--muted-color); font-size: 1rem; max-width: 700px; margin: 0 auto; }
 
-        .tag {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.3rem 1rem; background: rgba(var(--primary-rgb), 0.08);
-            border: 1px solid var(--primary); border-radius: 50px;
-            color: var(--primary); font-size: 0.7rem; font-weight: 700;
-            text-transform: uppercase; margin-bottom: 1rem;
-        }
+        .tag { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1.2rem; background: rgba(var(--primary-rgb), 0.08); border: 1px solid var(--primary); border-radius: 50px; color: var(--primary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1.2rem; }
 
-        /* Header Navigation */
-        header { position: fixed; top: 0; left: 0; width: 100%; background: var(--nav-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: var(--border-style); z-index: 10000; transition: background var(--duration); }
+        header { position: fixed; top: 0; left: 0; width: 100%; background: var(--nav-bg); backdrop-filter: blur(12px); border-bottom: var(--border-style); z-index: 10000; transition: background var(--duration); }
         .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 80px; }
+        .brand { font-size: 1.35rem; font-weight: 800; color: var(--title-color); text-decoration: none; display: flex; align-items: center; gap: 0.6rem; }
         
-        .brand { font-size: 1.35rem; font-weight: 800; color: var(--title-color); text-decoration: none; display: flex; align-items: center; gap: 0.6rem; min-width: 220px; }
-        .site-logo{ height: 70px; width: auto; display: block; transition: transform 0.3s ease; }
-        .brand:hover .site-logo{ transform: scale(1.05); }
-        
-        nav ul { display: flex; list-style: none; gap: 1.8rem; align-items: center; }
-        nav ul li a { color: var(--body-color); text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; transition: color 0.2s ease; }
+        nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        nav ul li a { color: var(--title-color); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: color 0.2s ease; }
         nav ul li a:hover { color: var(--primary); }
         
-        .toggle-mode { background: transparent; border: 1px solid var(--primary); color: var(--primary); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.2s ease; }
+        .toggle-mode { background: transparent; border: 1px solid var(--primary); color: var(--primary); width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.2s ease; }
         .toggle-mode:hover { background: var(--primary); color: #ffffff; }
 
-        /* Hero */
-        .hero { padding-top: 100px; min-height: 70vh; display: flex; align-items: center; }
-        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; color: var(--title-color); line-height: 1.2; margin-bottom: 0.8rem; }
+        .hero { padding-top: 130px; padding-bottom: 60px; min-height: 70vh; display: flex; align-items: center; text-align: center; border-bottom: none; }
+        .hero h1 { font-size: clamp(2.3rem, 5.5vw, 3.8rem); font-weight: 800; color: var(--title-color); line-height: 1.15; margin-bottom: 1rem; }
         .hero h1 span { color: var(--primary); }
-        .hero h3 { font-size: 1.1rem; font-weight: 500; color: var(--muted-color); margin-bottom: 1rem; }
-        .hero p { font-size: 0.95rem; color: var(--body-color); margin-bottom: 1.8rem; max-width: 750px; }
-        .actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-        
-        /* Buttons */
-        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; text-decoration: none; transition: all 0.2s ease; cursor: pointer; border: 1px solid transparent; }
-        .btn-solid { background: var(--primary); color: #ffffff; }
-        .btn-solid:hover { background: transparent; color: var(--primary); border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.2); }
-        .btn-stroke { background: transparent; color: var(--title-color); border-color: var(--body-color); }
-        .btn-stroke:hover { border-color: var(--primary); color: var(--primary); }
-        .btn-cv { border-color: #0284c7; color: #0284c7; }
-        .btn-cv:hover { background: #0284c7; color: #ffffff; box-shadow: 0 8px 20px rgba(2, 132, 199, 0.2); transform: translateY(-2px); }
-        .btn-ln { border-color: #0077b5; color: #0077b5; }
-        .btn-ln:hover { background: #0077b5; color: #ffffff; box-shadow: 0 8px 20px rgba(0, 119, 181, 0.2); transform: translateY(-2px); }
+        .hero h3 { font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 600; color: var(--body-color); margin-bottom: 1.5rem; letter-spacing: 0.5px; }
+        .hero p { font-size: 1.05rem; color: var(--muted-color); margin: 0 auto 2.5rem auto; max-width: 800px; line-height: 1.6; }
+        .actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; align-items: center; flex-direction: column; }
+        .actions-row { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+        .response-hint { font-size: 0.85rem; color: var(--success-color); font-weight: 600; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
 
-        /* Grids & Blocks */
-        .col-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.5rem; }
-        .col-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 1.2rem; }
-        
-        .box-item { background: var(--card-bg); border: var(--border-style); border-radius: 8px; padding: 1.8rem 1.5rem; box-shadow: var(--card-shadow); transition: transform 0.25s ease, border-color 0.25s ease; }
-        .box-item:hover { transform: translateY(-4px); border-color: var(--primary); }
-        .box-item .icon-wrap { width: 42px; height: 42px; background: rgba(var(--primary-rgb), 0.08); color: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 1.2rem; }
-        .box-item h4 { font-size: 1.1rem; color: var(--title-color); margin-bottom: 0.6rem; font-weight: 700; }
-        .box-item p { font-size: 0.85rem; color: var(--body-color); }
-        
-        .privacy-box { border-left: 4px solid var(--primary); background: rgba(var(--primary-rgb), 0.02); }
+        .trust-bar { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 3rem; background: var(--card-bg); border-top: var(--border-style); border-bottom: var(--border-style); padding: 1.5rem 5%; box-shadow: var(--card-shadow); }
+        .trust-item { display: flex; align-items: center; gap: 0.8rem; font-weight: 700; color: var(--title-color); font-size: 0.95rem; }
+        .trust-item i { color: var(--primary); font-size: 1.4rem; }
 
-        /* Packs Commercial System */
-        .tier-card { background: var(--card-bg); border: var(--border-style); border-radius: 8px; padding: 1.8rem 1.2rem; box-shadow: var(--card-shadow); text-align: center; display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--muted-color); transition: all 0.25s ease; }
-        .tier-card.featured { border-top-color: var(--primary); }
-        .tier-card:hover { border-color: var(--primary); }
-        .tier-card h3 { font-size: 1.3rem; color: var(--title-color); margin-bottom: 0.3rem; font-weight: 800; }
-        .tier-desc { font-size: 0.8rem; color: var(--muted-color); margin-bottom: 1.2rem; }
-        .tier-list { list-style: none; text-align: left; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; }
-        .tier-list li { font-size: 0.85rem; color: var(--body-color); display: flex; align-items: center; gap: 0.5rem; }
-        .tier-list li i { color: var(--success-color); }
-        .tier-card .btn { margin-top: auto; width: 100%; justify-content: center; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.9rem 1.8rem; border-radius: 8px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: all 0.2s ease; cursor: pointer; border: 1px solid transparent; }
+        .btn-solid { background: var(--primary); color: #ffffff; box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3); }
+        .btn-solid:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.4); }
+        .btn-stroke { background: var(--card-bg); color: var(--title-color); border-color: var(--border-style); box-shadow: var(--card-shadow); }
+        .btn-stroke:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
 
-        /* Panel Form Stepper */
-        .panel-form { max-width: 600px; margin: 0 auto; background: var(--card-bg); border: var(--border-style); border-radius: 10px; padding: 1.8rem 1.8rem; box-shadow: var(--card-shadow); }
-        .step-progress { display: flex; justify-content: space-between; margin-bottom: 1.8rem; position: relative; }
+        .col-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1.8rem; }
+        
+        .box-item { background: var(--card-bg); border: var(--border-style); border-radius: 12px; padding: 2rem; box-shadow: var(--card-shadow); transition: transform 0.25s ease, border-color 0.25s ease; text-align: left; }
+        .box-item:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .box-item .icon-wrap { width: 48px; height: 48px; background: rgba(var(--primary-rgb), 0.1); color: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 1.5rem; }
+        .box-item h4 { font-size: 1.15rem; color: var(--title-color); margin-bottom: 0.8rem; font-weight: 800; }
+        .box-item p { font-size: 0.9rem; color: var(--body-color); line-height: 1.6; }
+
+        .conf-card { background: var(--card-bg); border: var(--border-style); border-left: 4px solid var(--primary); border-radius: 0 12px 12px 0; padding: 2.5rem; box-shadow: var(--card-shadow); max-width: 850px; margin: 0 auto; text-align: center; }
+        .conf-icon-big { width: 64px; height: 64px; background: rgba(217, 119, 6, 0.1); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 1.5rem auto; }
+        .conf-card h3 { color: var(--title-color); font-size: 1.4rem; font-weight: 800; margin-bottom: 1rem; }
+        .conf-card p { font-size: 1.05rem; line-height: 1.7; color: var(--body-color); }
+        .conf-points { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; flex-wrap: wrap; border-top: 1px solid var(--border-style); padding-top: 1.5rem; }
+        .conf-point-item { font-size: 0.9rem; font-weight: 700; color: var(--title-color); display: flex; align-items: center; gap: 0.5rem; }
+        .conf-point-item i { color: var(--success-color); }
+
+        .panel-form { max-width: 650px; margin: 0 auto; background: var(--card-bg); border: var(--border-style); border-radius: 12px; padding: 2.5rem; box-shadow: var(--card-shadow); }
+        .step-progress { display: flex; justify-content: space-between; margin-bottom: 2rem; position: relative; }
         .step-progress::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: var(--border-style); z-index: 1; transform: translateY(-50%); }
-        .step-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--main-bg); border: 2px solid var(--muted-color); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; z-index: 2; color: var(--muted-color); transition: all 0.2s ease; }
-        .step-dot.active { border-color: var(--primary); color: var(--primary); background: var(--card-bg); }
+        .step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--main-bg); border: 2px solid var(--border-style); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; z-index: 2; color: var(--muted-color); transition: all 0.2s ease; }
+        .step-dot.active { border-color: var(--primary); color: var(--primary); background: var(--card-bg); box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.2); }
         
-        .form-section { display: none; opacity: 0; transform: translateY(5px); transition: opacity 0.25s ease, transform 0.25s ease; }
-        .form-section.active { display: flex; flex-direction: column; gap: 1rem; opacity: 1; transform: translateY(0); }
+        .form-section { display: none; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .form-section.active { display: flex; flex-direction: column; gap: 1.2rem; opacity: 1; transform: translateY(0); }
         
-        .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
-        .field-group label { font-size: 0.8rem; font-weight: 700; color: var(--title-color); }
-        .field-group select, .field-group input, .field-group textarea { width: 100%; padding: 0.7rem 1rem; background: var(--main-bg); border: var(--border-style); border-radius: 6px; color: var(--title-color); font-size: 0.9rem; outline: none; }
-        .field-group select:focus, .field-group input:focus, .field-group textarea:focus { border-color: var(--primary); }
-        .form-hint { font-size: 0.75rem; color: var(--muted-color); display: flex; align-items: center; gap: 0.4rem; margin-top: -0.2rem; }
-        .form-actions { display: flex; justify-content: space-between; margin-top: 1.5rem; }
+        .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        .field-group label { font-size: 0.85rem; font-weight: 700; color: var(--title-color); }
+        .field-group select, .field-group input, .field-group textarea { width: 100%; padding: 0.8rem 1.2rem; background: var(--main-bg); border: 1px solid var(--border-style); border-radius: 8px; color: var(--title-color); font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        .field-group select:focus, .field-group input:focus, .field-group textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1); }
+        .form-actions { display: flex; justify-content: space-between; margin-top: 2rem; }
 
-        /* 3D Interactive vCard Deck System */
-        .deck-wrapper { perspective: 1000px; width: 100%; max-width: 450px; height: 240px; margin: 0 auto 1.5rem auto; cursor: pointer; }
-        .deck-card { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--card-shadow); border-radius: 12px; }
-        .deck-wrapper:hover .deck-card, .deck-wrapper.flipped .deck-card { transform: rotateY(180deg); }
-        
-        .deck-face {
-            position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden;
-            border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;
-            border: 2px solid var(--primary); background: #0B3D91; color: #f8fafc;
-        }
-        .deck-face::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 20px 20px; pointer-events: none; border-radius: 12px;
-        }
-        .deck-rear { transform: rotateY(180deg); background: #0A3278; }
-        
-        .deck-top { display: flex; justify-content: space-between; align-items: flex-start; }
-        .deck-logo { font-size: 1rem; font-weight: 800; display: flex; align-items: center; gap: 0.4rem; color: #f8fafc; }
-        .deck-chip { width: 28px; height: 20px; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); border-radius: 4px; opacity: 0.7; position: relative; }
-        .deck-chip::after { content: ''; position: absolute; top: 3px; left: 6px; width: 14px; height: 14px; border: 1px solid #94a3b8; }
-        
-        .deck-mid h4 { font-size: 1rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.1rem; }
-        .deck-mid p { font-size: 0.7rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
-        .deck-bottom { display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.65rem; color: #94a3b8; font-family: 'Fira Code', monospace; }
-        
-        .deck-data { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.3rem; }
-        .deck-data li { display: flex; align-items: center; gap: 0.6rem; font-size: 0.75rem; color: #cbd5e1; }
-        .deck-data li i { color: var(--primary); width: 14px; text-align: center; }
-        
-        .qr-holder { background: white; padding: 4px; border-radius: 6px; width: 65px; height: 65px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .deck-hint { text-align: center; color: var(--muted-color); font-size: 0.75rem; font-weight: 600; margin-top: 0.5rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+        .whatsapp-widget { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; align-items: flex-end; gap: 15px; pointer-events: none; }
+        .chat-bubble { pointer-events: auto; background: var(--card-bg); border: var(--border-style); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); padding: 15px 20px; border-radius: 20px 20px 0 20px; font-size: 0.9rem; color: var(--title-color); font-weight: 600; max-width: 280px; text-align: right; direction: rtl; opacity: 0; transform: translateY(20px) scale(0.9); animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.5s forwards; }
+        .chat-bubble span { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: var(--muted-color); font-weight: 500; margin-top: 8px; }
+        .chat-bubble span i { color: #10b981; font-size: 0.5rem; animation: blink 2s infinite; }
+        .wp-link { pointer-events: auto; width: 60px; height: 60px; background: #25d366; color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .wp-link:hover { transform: scale(1.1); box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6); }
 
-        .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
-        
-        .logo-separator{ text-align:center; padding: 30px 0; }
-        .logo-separator img{ width: 160px; height:auto; opacity:0.08; transition:all 0.3s ease; }
-        .logo-separator img:hover{ opacity:0.15; transform:scale(1.05); }
-        
-        /* Fixed WhatsApp Anchor Button */
-        .wp-link { position: fixed; bottom: 20px; right: 20px; width: 48px; height: 48px; background: #25d366; color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); z-index: 9999; text-decoration: none; transition: transform 0.2s ease; }
-        .wp-link:hover { transform: scale(1.05); }
+        @keyframes popIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        footer { padding: 2rem 0; background: var(--card-bg); border-top: var(--border-style); text-align: center; font-size: 0.8rem; color: var(--muted-color); }
-        footer .base-links { margin-top: 0.8rem; display: flex; justify-content: center; gap: 1.2rem; align-items: center; }
-        footer .base-links a { color: var(--muted-color); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.3rem; }
-        footer .base-links a:hover { color: var(--primary); }
-        footer .base-links .split { color: var(--muted-color); opacity: 0.4; }
+        footer { padding: 4rem 5% 2rem; background: var(--card-bg); border-top: var(--border-style); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; text-align: left; margin-bottom: 2rem; }
+        .footer-col h4 { color: var(--title-color); font-size: 1.1rem; margin-bottom: 1rem; font-weight: 800; }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+        .footer-col ul li, .footer-col ul a { color: var(--muted-color); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+        .footer-col ul a:hover { color: var(--primary); }
+        .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid var(--border-style); color: var(--muted-color); font-size: 0.85rem; }
 
         @media (max-width: 768px) { 
             nav ul { display: none; } 
-            .site-logo { height: 50px; }
-            .nav-inner { height: 65px; }
-            .hero { padding-top: 80px; min-height: 60vh; }
-            .col-3, .col-4 { gap: 1rem; }
-            .box-item { padding: 1.2rem; }
-            .tier-card { padding: 1.2rem; }
-            #cad-coords, #axis-h, #axis-v, #cad-selection { display: none !important; } /* Hide technical stuff on mobile */
+            .nav-inner { height: 70px; }
+            .hero { padding-top: 100px; padding-bottom: 40px; }
+            .hero h1 { font-size: 2.1rem; }
+            .actions-row { flex-direction: column; width: 100%; }
+            .btn { width: 100%; padding: 1rem; }
+            .trust-bar { flex-direction: column; gap: 1.2rem; align-items: flex-start; padding: 1.2rem 1rem; }
+            .col-3 { gap: 1.2rem; }
+            .box-item { padding: 1.5rem; }
+            .conf-card { padding: 1.5rem; border-radius: 8px; }
+            .conf-points { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
+            .panel-form { padding: 1.5rem; }
+            #cad-coords, #axis-h, #axis-v, #cad-selection { display: none !important; }
+            .whatsapp-widget { bottom: 20px; right: 20px; }
+            .chat-bubble { max-width: 220px; padding: 12px 15px; font-size: 0.85rem; }
+            .wp-link { width: 50px; height: 50px; font-size: 1.6rem; }
         }
-
-        /* ========== CENTRAGE GLOBAL ========== */
-        .hero .container { text-align: center; }
-        .hero .actions { justify-content: center; }
-        .hero p { margin-left: auto; margin-right: auto; }
-        .hero .tag { margin-left: auto; margin-right: auto; }
-        .box-item, .privacy-box { text-align: center; }
-        .box-item .icon-wrap, .privacy-box .icon-wrap { margin-left: auto; margin-right: auto; }
-        .tier-card { text-align: center; }
-        .tier-card .tier-list { text-align: left; display: inline-block; width: auto; min-width: 180px; margin-left: auto; margin-right: auto; }
-        #visite .container > div:last-of-type { justify-content: center; display: flex; flex-wrap: wrap; gap: 0.8rem; }
-        .deck-wrapper { margin-left: auto; margin-right: auto; }
-        .section-header h2, .section-header p { margin-left: auto; margin-right: auto; }
-        .actions .btn { margin-bottom: 0; }
     </style>
 </head>
 <body>
@@ -289,16 +189,13 @@
     <header>
         <div class="container nav-inner">
            <a href="#accueil" class="brand">
-                <img src="logozcad.png" alt="Z-CAD Logo" class="site-logo">
+                <span style="font-size: 1.8rem; color: var(--primary);">Z</span>-CAD
            </a>
             <nav role="navigation" aria-label="Menu principal">
                 <ul>
-                    <li><a href="#accueil">Accueil</a></li>
-                    <li><a href="#solutions">Solutions</a></li>
-                    <li><a href="#confidentialite">Engagement</a></li>
-                    <li><a href="#packs">Offres</a></li>
-                    <li><a href="#visite">Contact vCard</a></li>
-                    <li><a href="#devis">Cadrage</a></li>
+                    <li><a href="#services">Services BTP</a></li>
+                    <li><a href="#charte">Confidentialité</a></li>
+                    <li><a href="#devis">Devis / Chiffrage</a></li>
                 </ul>
             </nav>
             <button class="toggle-mode" id="ctrl-theme" aria-label="Changer le mode de couleur">
@@ -310,176 +207,93 @@
     <main>
         <section class="hero" id="accueil">
             <div class="container">
-                <span class="tag"><i class="fa-solid fa-shield-halved"></i> Secret Professionnel & Métré de Précision</span>
-                <h1>Projeteur <span>Métreur Btp</span></h1>
-                <h3>Zakariaa Karfa Bekali —  Métreur Projeteur Freelance</h3>
-                <p>Traitement rigoureux de dossiers d'appels d'offres complexes. Extraction unifiée et automatisée des linéaires et surfaces directement depuis la géométrie CAO pour sécuriser vos budgets de chantiers.</p>
+                <span class="tag"><i class="fa-solid fa-shield-halved"></i> Sous-traitance Technique & Secret Professionnel</span>
+                
+                <h1>Métreur Vérificateur <br><span>& Économiste de Construction</span></h1>
+                <h3>Métré TCE • Décomptes • Études Quantitatives • Appels d’Offres</h3>
+                
+                <p>Réduisez définitivement les erreurs quantitatives, gagnez un temps précieux et sécurisez vos budgets de chantier. Des livrables d'ingénierie précis, gérés dans la discrétion la plus totale.</p>
                 
                 <div class="actions">
-                    <a href="#devis" class="btn btn-solid"><i class="fa-solid fa-calculator"></i> Lancer l'audit de projet</a>
-                    <a href="./presentation%20zak.pdf" class="btn btn-stroke" target="_blank"><i class="fa-solid fa-file-pdf"></i> Présentation Commerciale</a>
-                    <a href="https://wa.me/212684726647" class="btn btn-stroke" target="_blank"><i class="fa-brands fa-whatsapp"></i> Contact Direct</a>
-                    <a href="https://www.linkedin.com/in/zakariaa-karfa-bekali-%E2%AD%90-b33439100/" class="btn btn-stroke btn-ln" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                    <div class="actions-row">
+                        <a href="#devis" class="btn btn-solid"><i class="fa-solid fa-calculator"></i> Demander un devis</a>
+                    </div>
+                    <div class="response-hint"><i class="fa-solid fa-bolt"></i> Réponse et chiffrage sous 24h</div>
                 </div>
             </div>
         </section>
 
-        <section id="solutions">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Problèmes Résolus</h2>
-                    <p>Élimination complète des dérives budgétaires et sécurisation de la conformité de vos fichiers de plans.</p>
-                </div>
-                <div class="col-3">
-                    <article class="box-item">
-                        <div class="icon-wrap"><i class="fa-solid fa-file-pdf"></i></div>
-                        <h4>Plans Figés & PDF Scannés</h4>
-                        <p>Restitution vectorielle fidèle sous format DWG standardisé. Organisation méthodique des calques (Layers) métiers selon vos chartes graphiques.</p>
-                    </article>
-                    <article class="box-item">
-                        <div class="icon-wrap"><i class="fa-solid fa-calculator"></i></div>
-                        <h4>Métrés Manuels Imprécis</h4>
-                        <p>Extraction des données quantitatives (ex: semelles filantes) basée directement sur la géométrie, évitant les erreurs d'annotations manuelles.</p>
-                    </article>
-                    <article class="box-item">
-                        <div class="icon-wrap"><i class="fa-solid fa-layer-group"></i></div>
-                        <h4>Altération Globale des Blocs</h4>
-                        <p>Utilisation d'algorithmes d'isolation permettant de modifier la couleur ou les propriétés d'un bloc localement sans impacter sa définition générale.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <div class="logo-separator">
-            <img src="ZCADZ.png" alt="Z-CAD Symbol">
+        <div class="trust-bar">
+            <div class="trust-item"><i class="fa-solid fa-calendar-check"></i> +6 ans d'expérience</div>
+            <div class="trust-item"><i class="fa-solid fa-layer-group"></i> Expertise TCE (Tous Corps d'État)</div>
+            <div class="trust-item"><i class="fa-solid fa-helmet-safety"></i> Bureau + Suivi Terrain</div>
         </div>
 
-        <section id="confidentialite" style="background: rgba(var(--primary-rgb), 0.01);">
+        <section id="services">
             <div class="container">
                 <div class="section-header">
-                    <h2>Politique Strict de Confidentialité</h2>
-                    <p>Vos projets CAO, estimations et bases de données tarifaires constituent un patrimoine stratégique protégé.</p>
+                    <h2>Solutions de Gestion Quantitative & Coûts</h2>
+                    <p>Une externalisation fiable et structurée pour répondre aux exigences des entreprises de construction, maîtres d'ouvrages et bureaux d'études au Maroc.</p>
                 </div>
                 <div class="col-3">
-                    <article class="box-item privacy-box">
-                        <div class="icon-wrap"><i class="fa-solid fa-user-secret"></i></div>
-                        <h4>Accord de Non-Divulgation</h4>
-                        <p>Chaque fichier d’exécution (DWG, PDF) ou table DQE qui m'est confié est soumis au secret professionnel absolu. Aucun rendu n'est jamais publié ou partagé.</p>
+                    <article class="box-item">
+                        <div class="icon-wrap"><i class="fa-solid fa-calculator"></i></div>
+                        <h4>1. Métré TCE</h4>
+                        <p>Extraction et calcul rigoureux des volumes à partir de vos plans d'exécution. Parfaite maîtrise du Gros Œuvre pour éliminer tout risque d'écart sur chantier.</p>
                     </article>
-                    <article class="box-item privacy-box">
-                        <div class="icon-wrap"><i class="fa-solid fa-trash-can-arrow-up"></i></div>
-                        <h4>Cycle de Vie des Données</h4>
-                        <p>Vos données sources sont stockées dans un environnement crypté isolé et purgées définitivement de mes stations de calcul après livraison finale du livrable.</p>
+                    <article class="box-item">
+                        <div class="icon-wrap"><i class="fa-solid fa-paint-roller"></i></div>
+                        <h4>2. Lots Architecturaux</h4>
+                        <p>Quantification exhaustive du Second Œuvre : calepinages complexes, revêtements, cloisons et finitions intérieures/extérieures mesurés avec exactitude.</p>
                     </article>
-                    <article class="box-item privacy-box">
-                        <div class="icon-wrap"><i class="fa-solid fa-gavel"></i></div>
-                        <h4>Éthique des Appels d'Offres</h4>
-                        <p>Garantie absolue de neutralité. Vos chiffrages et quantitatifs ne sont jamais exploités pour favoriser ou influencer d'autres entités lors des consultations.</p>
+                    <article class="box-item">
+                        <div class="icon-wrap"><i class="fa-solid fa-file-signature"></i></div>
+                        <h4>3. Décompte & Vérification</h4>
+                        <p>Contrôle et validation des attachements sur site. Suivi analytique des situations de travaux pour garantir la stricte conformité des budgets exécutés.</p>
                     </article>
-                </div>
-            </div>
-        </section>
-
-        <section id="packs">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Structure des Options Commerciales</h2>
-                    <p>Quatre niveaux d'interventions conçus pour sécuriser l'avancement de vos dossiers d'appels d'offres.</p>
-                </div>
-                <div class="col-4">
-                    <article class="tier-card">
-                        <h3>Pack A</h3>
-                        <p class="tier-desc">Standardisation & Traitement</p>
-                        <ul class="tier-list">
+                    <article class="box-item">
+                        <div class="icon-wrap"><i class="fa-solid fa-chart-pie"></i></div>
+                        <h4>4. Étude de Prix</h4>
+                        <p>Analyse des coûts, débourser sec, et élaboration de prix de revient stratégiques pour maximiser votre compétitivité commerciale.</p>
+                    </article>
+                    <article class="box-item">
+                        <div class="icon-wrap"><i class="fa-solid fa-handshake-angle"></i></div>
+                        <h4>5. Consultation Fournisseurs</h4>
+                        <p>Établissement des dossiers de consultation (DCE), tableaux comparatifs des offres reçues et alignement technique pour sécuriser vos achats.</p>
+                    </article>
+                    <article class="box-item">
+                        <div class="icon-wrap"><i class="fa-solid fa-file-pdf"></i></div>
+                        <h4>6. Plans Figés & PDF Scannés</h4>
+                        <p>Restitution vectorielle fidèle sous format DWG standardisé. Organisation méthodique des calques (Layers) métiers selon vos chartes graphiques.</p>
+                        <ul style="margin-top: 10px; list-style: none; font-size: 0.85rem; color: var(--primary);">
                             <li><i class="fa-solid fa-check"></i> Conversion PDF vers DWG</li>
                             <li><i class="fa-solid fa-check"></i> Tri et filtrage par calques</li>
                             <li><i class="fa-solid fa-check"></i> Mise à l'échelle exacte 1:1</li>
                         </ul>
-                        <a href="#devis" class="btn btn-stroke">Sélectionner</a>
-                    </article>
-                    <article class="tier-card featured">
-                        <h3>Pack B</h3>
-                        <p class="tier-desc">Métré & Quantification</p>
-                        <ul class="tier-list">
-                            <li><i class="fa-solid fa-check"></i> Lots GO / Second Œuvre</li>
-                            <li><i class="fa-solid fa-check"></i> Tableaux Excel dynamiques</li>
-                            <li><i class="fa-solid fa-check"></i> Plans de repérage précis</li>
-                        </ul>
-                        <a href="#devis" class="btn btn-solid">Sélectionner</a>
-                    </article>
-                    <article class="tier-card">
-                        <h3>Pack C</h3>
-                        <p class="tier-desc">Relevés & Coupes</p>
-                        <ul class="tier-list">
-                            <li><i class="fa-solid fa-check"></i> Restitution d'États Existants</li>
-                            <li><i class="fa-solid fa-check"></i> Dessin de Coupes & Façades</li>
-                            <li><i class="fa-solid fa-check"></i> Tolérance technique stricte</li>
-                        </ul>
-                        <a href="#devis" class="btn btn-stroke">Sélectionner</a>
-                    </article>
-                    <article class="tier-card">
-                        <h3>Pack D</h3>
-                        <p class="tier-desc">Assistance Continue</p>
-                        <ul class="tier-list">
-                            <li><i class="fa-solid fa-check"></i> Subdivison CAO dédiée</li>
-                            <li><i class="fa-solid fa-check"></i> Audit d'erreurs quantitatives</li>
-                            <li><i class="fa-solid fa-check"></i> Support technique prioritaire</li>
-                        </ul>
-                        <a href="#devis" class="btn btn-stroke">Sélectionner</a>
                     </article>
                 </div>
             </div>
         </section>
 
-        <section id="visite">
+        <section id="charte" style="background: rgba(var(--primary-rgb), 0.025);">
             <div class="container">
                 <div class="section-header">
-                    <h2>Carte de Visite Digitale & QR Code</h2>
-                    <p>Cliquez sur la carte pour basculer entre les faces d'informations.</p>
+                    <h2>Engagement de Confidentialité Absolue</h2>
+                    <p>Pourquoi vous ne trouverez aucun portfolio ni nom de projet public ici.</p>
                 </div>
                 
-                <div class="deck-wrapper" id="action-card">
-                    <div class="deck-card">
-                        <div class="deck-face">
-                            <div class="deck-top">
-                                <div class="deck-logo">
-                                    <img src="logozcad.png" alt="Z-CAD Logo" style="height:45px;width:auto;">
-                                </div>
-                                <div class="deck-chip"></div>
-                            </div>
-                            <div class="deck-mid">
-                                <h4>Zakariaa Karfa Bekali</h4>
-                                <p>Conception CAD 2D/3D & Métré de Precision</p>
-                            </div>
-                            <div class="deck-bottom">
-                                <span>ID: 2026-ZCAD</span>
-                                <span>SALÉ / CASABLANCA</span>
-                            </div>
-                        </div>
-                        <div class="deck-face deck-rear">
-                            <div class="deck-top">
-                                <span style="font-size: 0.7rem; font-weight: 700; color: var(--primary);">SCAN TO VISIT</span>
-                                <div id="qr-target" class="qr-holder"></div>
-                            </div>
-                            <ul class="deck-data">
-                                <li><i class="fa-solid fa-phone"></i> +212 684 726647</li>
-                                <li><i class="fa-solid fa-envelope"></i> mr.zakariaa@outlook.com</li>
-                                <li><i class="fa-solid fa-location-dot"></i> Maroc Rabat-Salé</li>
-                            </ul>
-                            <div class="deck-bottom" style="width: 100%; justify-content: center; margin-top: 0.2rem;">
-                                <span style="color: var(--primary); font-size: 0.6rem;">Économie de la Construction</span>
-                            </div>
-                        </div>
+                <div class="conf-card">
+                    <div class="conf-icon-big"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3>Secret Professionnel Intégral</h3>
+                    <p>
+                        En tant que partenaire technique stratégique pour les entreprises du BTP et les bureaux d’études, je considère que <strong>vos chiffres, vos plans et vos marges n'appartiennent qu'à vous</strong>. <br><br>
+                        Pour préserver l'anonymat complet de vos sous-traitances et vous protéger face à la concurrence, <strong>aucun document (PDF, DWG), aucun montant et aucun élément de projet ne sort de notre espace de collaboration</strong>. Notre relation est basée sur un secret contractuel strict et inaliénable.
+                    </p>
+                    <div class="conf-points">
+                        <div class="conf-point-item"><i class="fa-solid fa-circle-check"></i> Zéro fuite de données</div>
+                        <div class="conf-point-item"><i class="fa-solid fa-circle-check"></i> Chiffres strictement protégés</div>
+                        <div class="conf-point-item"><i class="fa-solid fa-circle-check"></i> Aucun usage commercial de vos plans</div>
                     </div>
-                </div>
-
-                <div class="deck-hint">
-                    <i class="fa-solid fa-rotate"></i> <span>Cliquez pour retourner la carte</span>
-                </div>
-
-                <div style="text-align: center; margin-top: 1rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn btn-solid" id="action-vcard"><i class="fa-solid fa-address-card"></i> Télécharger la VCard</button>
-                    <button class="btn btn-stroke btn-cv" id="download-cv-footer"><i class="fa-solid fa-file-pdf"></i> Télécharger CV (PDF)</button>
                 </div>
             </div>
         </section>
@@ -487,8 +301,8 @@
         <section id="devis">
             <div class="container">
                 <div class="section-header">
-                    <h2>Cadrage Instantané de votre Projet</h2>
-                    <p>Définissez vos besoins techniques en 3 étapes simples pour recevoir une proposition sous 24h.</p>
+                    <h2>Demande d’Étude Précise</h2>
+                    <p>Formulez votre besoin en quelques clics. Analyse et retour qualitatif sous 24 heures.</p>
                 </div>
                 
                 <div class="panel-form">
@@ -498,42 +312,41 @@
                         <div class="step-dot" id="dot-3">3</div>
                     </div>
 
-                    <form id="form-stepper" action="https://formspree.io/f/xbdbnpza" method="POST" enctype="multipart/form-data">
+                    <form id="form-stepper" action="https://formspree.io/f/xbdbnpza" method="POST">
                         <div class="form-section active" id="step-block-1">
                             <div class="field-group">
-                                <label for="select-pack">1. Sélectionnez la formule requise :</label>
-                                <select id="select-pack" name="Pack choisi" required>
-                                    <option value="pack-a">Pack A — Standardisation & Traitement</option>
-                                    <option value="pack-b">Pack B — Métré & Quantification</option>
-                                    <option value="pack-c">Pack C — Relevés & Coupes</option>
-                                    <option value="pack-d">Pack D — Assistance Continue</option>
+                                <label for="select-pack">1. Type de prestation requise :</label>
+                                <select id="select-pack" name="Mission" required>
+                                    <option value="metre">Métré & Étude Quantitative</option>
+                                    <option value="decompte">Décompte & Vérification Chantier</option>
+                                    <option value="dao">Dessin AutoCAD / Mise au net graphique</option>
+                                    <option value="ao">Assistance Dossier Appel d'Offres</option>
+                                    <option value="pdf">Plans Figés / PDF Scannés</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-section" id="step-block-2">
                             <div class="field-group">
-                                <label for="select-lot">2. Sélectionnez le lot technique principal :</label>
-                                <select id="select-lot" name="Lot Technique" required>
-                                    <option value="go">Gros Œuvre (Infrastructures, Structure Béton)</option>
-                                    <option value="so">Second Œuvre (Revêtements, Cloisonnements)</option>
-                                    <option value="tous">Tous les lots (Dossier complet de consultation)</option>
+                                <label for="select-lot">2. Périmètre technique :</label>
+                                <select id="select-lot" name="Lots" required>
+                                    <option value="go">Gros Œuvre (GO)</option>
+                                    <option value="so">Second Œuvre / Lots Architecturaux</option>
+                                    <option value="tce">TCE (Tous Corps d'État)</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-section" id="step-block-3">
                             <div class="field-group">
-                                <label for="input-email">3. Votre adresse email professionnelle :</label>
-                                <input type="email" id="input-email" name="Email client" placeholder="contact@entreprise.com" required>
+                                <label for="input-email">3. Vos coordonnées professionnelles :</label>
+                                <input type="email" id="input-email" name="Email client" placeholder="Adresse email professionnelle" required>
                             </div>
                             <div class="field-group">
-                                <label for="input-phone">Numéro de téléphone :</label>
-                                <input type="tel" id="input-phone" name="Téléphone client" placeholder="+212 6XX XX XX XX" required>
+                                <input type="tel" id="input-phone" name="Téléphone client" placeholder="Téléphone direct (ex: +212 6XX XX XX XX)" required>
                             </div>
                             <div class="field-group">
-                                <label for="input-details">Précisions ou contraintes de délais (Facultatif) :</label>
-                                <textarea id="input-details" name="Détails du projet" rows="2" placeholder="Ex: Nombre de plans à traiter, format source..."></textarea>
+                                <textarea id="input-details" name="Détails" rows="3" placeholder="Description sommaire du projet (Superficie, localisation, délais exigés...)"></textarea>
                             </div>
                         </div>
 
@@ -550,30 +363,51 @@
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 Studio Z-CAD — Zakariaa Karfa Bekali. Tous droits réservés.</p>
-            <div class="base-links">
-                <a href="#accueil">Accueil</a>
-                <span class="split">|</span>
-                <a href="#solutions">Solutions</a>
-                <span class="split">|</span>
-                <a href="#confidentialite">Engagement</a>
-                <span class="split">|</span>
-                <a href="https://www.linkedin.com/in/zakariaa-karfa-bekali-%E2%AD%90-b33439100/" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Z-CAD Studio</h4>
+                <ul>
+                    <li>Zakariaa Karfa Bekali</li>
+                    <li><i class="fa-solid fa-location-dot"></i> Zone : Rabat-Salé • Casablanca • Maroc</li>
+                </ul>
             </div>
+            <div class="footer-col">
+                <h4>Savoir-Faire</h4>
+                <ul>
+                    <li>Métré & Chiffrage TCE</li>
+                    <li>Lots Architecturaux</li>
+                    <li>Suivi de Décomptes</li>
+                    <li>Ingénierie Graphique CAD</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Sécurité & Contact</h4>
+                <ul>
+                    <li><a href="mailto:mr.zakariaa@outlook.com"><i class="fa-solid fa-envelope"></i> mr.zakariaa@outlook.com</a></li>
+                    <li><a href="https://wa.me/212684726647" target="_blank"><i class="fa-brands fa-whatsapp"></i> +212 684 72 66 47</a></li>
+                    <li><a href="https://www.linkedin.com/in/zakariaa-karfa-bekali-%E2%AD%90-b33439100/" target="_blank"><i class="fa-brands fa-linkedin"></i> Contact LinkedIn Professional</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Z-CAD. Protection stricte des données industrielles. Économie de la Construction.
         </div>
     </footer>
 
-    <a href="https://wa.me/212684726647" class="wp-link" target="_blank" rel="noopener" title="Contactez-moi sur WhatsApp">
-        <span class="sr">Contact WhatsApp</span>
-        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-    </a>
+    <div class="whatsapp-widget">
+        <div class="chat-bubble">
+            سلام! بغيتي تعرف شحال غادي يتقام عليك الميترو أو عندك شي Appel d'Offre؟ صيفط ليا المعلومات فسرية تامة، الخدمة والأرقام ديالك ما كيشوفها حد.
+            <span><i class="fa-solid fa-circle"></i> متاح للرد الفوري</span>
+        </div>
+        <a href="https://wa.me/212684726647" class="wp-link" target="_blank" rel="noopener" title="Contactez-moi sur WhatsApp">
+            <span class="sr" style="display:none;">Contact WhatsApp</span>
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+        </a>
+    </div>
 
     <script>
         (() => {
             'use strict';
-
-            const rawVCard = `BEGIN:VCARD\nVERSION:3.0\nN:Karfa Bekali;Zakariaa;;;\nFN:Zakariaa Karfa Bekali\nORG:Studio Z-CAD\nTITLE:Économiste de la Construction & Métreur Projeteur\nTEL;TYPE=CELL,VOICE:+212684726647\nEMAIL;TYPE=PREF,INTERNET:zakariaa.karfabekali@gmail.com\nURL:https://www.linkedin.com/in/zakariaa-karfa-bekali-%E2%AD%90-b33439100/nREV:2026-06-02T00:00:00ZnEND:VCARD`;
 
             const AppCore = {
                 state: { activeStep: 1, currentMode: 'light' },
@@ -589,8 +423,6 @@
                         next: document.getElementById('step-next'),
                         prev: document.getElementById('step-prev'),
                         formObj: document.getElementById('form-stepper'),
-                        cardDeck: document.getElementById('action-card'),
-                        vcardTrigger: document.getElementById('action-vcard'),
                         redirectField: document.getElementById('redirect-thanks')
                     };
 
@@ -599,7 +431,6 @@
                     this.loadTheme();
                     this.setupCrossAndCoords();
                     this.setupAutoCADSelection();
-                    this.buildQR();
                 },
 
                 setThanksRedirect() {
@@ -611,33 +442,21 @@
                     this.ui.modeBtn.addEventListener('click', () => this.switchMode());
                     this.ui.next.addEventListener('click', () => this.forward());
                     this.ui.prev.addEventListener('click', () => this.backward());
-                    this.ui.cardDeck.addEventListener('click', () => this.ui.cardDeck.classList.toggle('flipped'));
-                    this.ui.vcardTrigger.addEventListener('click', () => this.getVCard());
-                    
-                    document.querySelectorAll('.btn-cv').forEach(btn => {
-                        btn.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            this.getCV();
-                        });
-                    });
                 },
 
                 setupCrossAndCoords() {
-                    if (!window.matchMedia('(pointer: fine)').matches) return; // Désactiver sur mobile
+                    if (!window.matchMedia('(pointer: fine)').matches) return; 
                     
                     document.addEventListener('mousemove', (e) => {
-                        // Afficher et positionner les lignes
                         this.ui.hLine.style.display = 'block';
                         this.ui.vLine.style.display = 'block';
                         this.ui.hLine.style.top = `${e.clientY}px`;
                         this.ui.vLine.style.left = `${e.clientX}px`;
 
-                        // Afficher et positionner les Coordonnées (Dynamic Input)
                         this.ui.coords.style.display = 'block';
                         this.ui.coords.style.left = `${e.clientX + 15}px`;
                         this.ui.coords.style.top = `${e.clientY + 15}px`;
                         
-                        // Calcul des coordonnées (Multiplié lgrement pour un effet plus "métrique")
                         const xVal = (e.clientX * 1.25).toFixed(2);
                         const yVal = (e.clientY * 1.25).toFixed(2);
                         this.ui.coords.innerHTML = `X: ${xVal}<br>Y: ${yVal}`;
@@ -657,11 +476,10 @@
                     let startX = 0, startY = 0;
 
                     document.addEventListener('mousedown', (e) => {
-                        // Empêcher la sélection si on clique sur un bouton, un lien ou une carte
-                        if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.box-item') || e.target.closest('.tier-card') || e.target.closest('.panel-form') || e.target.closest('.deck-wrapper')) {
+                        if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.box-item') || e.target.closest('.conf-card') || e.target.closest('.panel-form') || e.target.closest('.whatsapp-widget')) {
                             return;
                         }
-                        if (e.button !== 0) return; // Uniquement le clic gauche
+                        if (e.button !== 0) return; 
                         
                         isSelecting = true;
                         startX = e.clientX;
@@ -673,7 +491,6 @@
                         this.ui.selBox.style.width = '0px';
                         this.ui.selBox.style.height = '0px';
                         
-                        // Empêcher la sélection de texte par défaut du navigateur
                         document.body.style.userSelect = 'none';
                     });
 
@@ -691,7 +508,6 @@
                         this.ui.selBox.style.left = `${Math.min(startX, currentX)}px`;
                         this.ui.selBox.style.top = `${Math.min(startY, currentY)}px`;
 
-                        // Logique AutoCAD: Gauche à Droite (Bleu), Droite à Gauche (Vert pointillé)
                         if (currentX < startX) {
                             this.ui.selBox.className = 'sel-crossing';
                         } else {
@@ -702,7 +518,7 @@
                     document.addEventListener('mouseup', () => {
                         isSelecting = false;
                         this.ui.selBox.style.display = 'none';
-                        document.body.style.userSelect = 'auto'; // Rétablir la sélection de texte
+                        document.body.style.userSelect = 'auto'; 
                     });
                 },
 
@@ -721,17 +537,6 @@
                     localStorage.setItem('app_mode', darkActive ? 'dark' : 'light');
                 },
 
-                buildQR() {
-                    new QRCode(document.getElementById("qr-target"), {
-                        text: window.location.href.split('#')[0], 
-                        width: 55,
-                        height: 55,
-                        colorDark : "#090f22",
-                        colorLight : "#ffffff",
-                        correctLevel : QRCode.CorrectLevel.M
-                    });
-                },
-
                 updateForm() {
                     document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
                     document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
@@ -742,7 +547,7 @@
                     }
 
                     this.ui.prev.style.display = this.state.activeStep === 1 ? 'none' : 'inline-flex';
-                    this.ui.next.innerHTML = this.state.activeStep === 3 ? 'Envoyer' : 'Suivant';
+                    this.ui.next.innerHTML = this.state.activeStep === 3 ? 'Envoyer la demande confidentielle' : 'Suivant';
                 },
 
                 forward() {
@@ -758,7 +563,7 @@
                         this.updateForm();
                     } else {
                         if (window.location.protocol === 'file:') {
-                            alert("Mode Local détécté. Sur GitHub Pages, ce formulaire sera envoyé de manière cryptée avec redirection vers la page de remerciements.");
+                            alert("Mode Local détecté. Le formulaire sera soumis via Formspree en production.");
                             return;
                         }
                         this.ui.formObj.submit();
@@ -770,25 +575,6 @@
                         this.state.activeStep--;
                         this.updateForm();
                     }
-                },
-
-                getVCard() {
-                    const file = new Blob([rawVCard], { type: 'text/vcard;charset=utf-8;' });
-                    const element = document.createElement('a');
-                    element.href = URL.createObjectURL(file);
-                    element.download = 'Zakariaa_Karfa_Bekali.vcf';
-                    document.body.appendChild(element);
-                    element.click();
-                    document.body.removeChild(element);
-                },
-
-                getCV() {
-                    const element = document.createElement('a');
-                    element.href = './cv.pdf'; 
-                    element.download = 'CV_Zakariaa_Karfa_Bekali_Economiste_Construction.pdf';
-                    document.body.appendChild(element);
-                    element.click();
-                    document.body.removeChild(element);
                 }
             };
 
